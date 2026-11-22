@@ -1,5 +1,10 @@
 # 戴森球计划 · 网页复刻
 
+> **整体复刻完成度约 40%（开发者估算）**
+> 估算涵盖原作的玩法、画面和操作体验。工厂生产、跨星物流和戴森球施工已可分段游玩，从标准着陆到通关的整局流程仍待验证。
+
+[查看实机截图](#实机截图) · [查看玩法与进度](./docs/玩法对照.md)
+
 以《戴森球计划》为参照的非官方 3D 网页游戏。下载仓库 ZIP 并解压，或用 Git 克隆仓库，即可在桌面浏览器中打开离线游戏。
 
 ![网页实机：恒星与在建的戴森球壳层](./docs/stellar-yard.png)
@@ -13,6 +18,85 @@
 进度会自动保存在当前浏览器。系统菜单可保存、导出、导入和选择画质。节能档限制为 30 FPS 和 90 万物理像素。生产统计、资源余额和壳层施工由固定步长模拟结算。离开标签页后暂停绘制与模拟。
 
 玩法收集、可验证的产线、参考图和待完成部分见 [玩法对照](./docs/玩法对照.md)。
+
+## 实机截图
+
+以下画面均截自网页版的实际运行。点击预览可查看原图和界面读数。
+
+### 地表工厂
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="./docs/advanced-mining.png"><img src="./docs/previews/advanced-mining.jpg" alt="大型采矿机实机截图"></a><br>
+      <strong>大型采矿机</strong><br>采矿机覆盖铁矿脉，需求塔派运输机来取矿。
+    </td>
+    <td width="50%" valign="top">
+      <a href="./docs/refit.png"><img src="./docs/previews/refit.jpg" alt="产线原位换装实机截图"></a><br>
+      <strong>产线原位换装</strong><br>换成集装分拣器和蓝带后，测点读到每分钟 7,200 件铁块。
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="./docs/blueprint.png"><img src="./docs/previews/blueprint.jpg" alt="蓝图施工实机截图"></a><br>
+      <strong>蓝图施工</strong><br>框选冶炼线、旋转蓝图，再让建设机逐件送来设备。
+    </td>
+    <td width="50%" valign="top">
+      <a href="./docs/production.png"><img src="./docs/previews/production.jpg" alt="生产统计实机截图"></a><br>
+      <strong>生产统计</strong><br>按时间范围对照铁矿消耗和铁块产量。
+    </td>
+  </tr>
+</table>
+
+### 跨行星工业
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="./docs/refinery.png"><img src="./docs/previews/refinery.jpg" alt="精炼与分馏实机截图"></a><br>
+      <strong>精炼与分馏</strong><br>原油精炼产生氢，分馏环让未转化的氢继续循环。
+    </td>
+    <td width="50%" valign="top">
+      <a href="./docs/logistics.png"><img src="./docs/previews/logistics.jpg" alt="跨星球物流实机截图"></a><br>
+      <strong>跨星球物流</strong><br>运输船运回钛石，再由本地运输机分拨。
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="./docs/orbital-collectors.png"><img src="./docs/previews/orbital-collectors.jpg" alt="巨星轨道采集实机截图"></a><br>
+      <strong>巨星轨道采集</strong><br>在巨星赤道布置采集器，等待运输船来取货。
+    </td>
+    <td width="50%" valign="top">
+      <a href="./docs/planetary-shield.png"><img src="./docs/previews/planetary-shield.jpg" alt="行星护盾实机截图"></a><br>
+      <strong>行星护盾</strong><br>从轨道看发生器的覆盖范围和已抵挡的轨道伤害。
+    </td>
+  </tr>
+</table>
+
+### 航行与戴森工程
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="./docs/cluster.png"><img src="./docs/previews/cluster.jpg" alt="星团航线实机截图"></a><br>
+      <strong>星团航线</strong><br>在星图上选择目标恒星，查看跨星距离。
+    </td>
+    <td width="50%" valign="top">
+      <a href="./docs/sail-flight.png"><img src="./docs/previews/sail-flight.jpg" alt="机甲航行实机截图"></a><br>
+      <strong>机甲航行</strong><br>跟随伊卡洛斯飞往目标行星。
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="./docs/layer-orbit.png"><img src="./docs/previews/layer-orbit.jpg" alt="壳层设计实机截图"></a><br>
+      <strong>壳层设计</strong><br>在编辑器中查看 9 km 和 14 km 两层轨道。
+    </td>
+    <td width="50%" valign="top">
+      <a href="./docs/surface-sky.png"><img src="./docs/previews/surface-sky.jpg" alt="地表观星实机截图"></a><br>
+      <strong>地表观星</strong><br>从行星表面仰望恒星，能透过尚未合拢的球壳看到日面。
+    </td>
+  </tr>
+</table>
 
 ## 许可与来源
 
