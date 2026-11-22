@@ -1,0 +1,95 @@
+.sector-preview{display:flex;gap:14px;align-items:center;width:min(330px,100%);padding:7px 0 10px;border-top:1px solid #a8cacc36;color:#90a5ae;font-size:10px}.sector-preview b{margin-left:4px;color:#d9e8e8;font:11px var(--mono)}
+.meta-table{width:100%;border-collapse:collapse;font:12px var(--mono);margin:9px 0 16px}.meta-table td,.meta-table th{padding:6px 3px;text-align:right;border-bottom:1px solid var(--line)}.meta-table th:first-child{text-align:left;white-space:nowrap}.meta-table th{font-weight:500;color:#a6c2c9}.meta-table th svg{width:20px;height:20px;vertical-align:middle;margin-right:6px}.meta-table th small{display:block;font-size:9px}.meta-table td:last-child{color:var(--aqua)}.meta-input{display:flex;align-items:center;justify-content:space-between;margin:8px 0;color:#b8cbd0}.meta-input input,.meta-input select{width:70%}.meta-input input{font-family:var(--mono)}
+/* 小高度保留可滚动的开档区，避免新增资源选项挤出开始按钮。 */
+@media(max-height:740px){#menu .launch{max-height:80dvh;overflow-y:auto;top:10dvh;transform:none;padding-right:8px}#menu .lead{margin-bottom:10px}}
+/* 与地表共用同一画布，面板使用固定的占位宽度；相机按对应可见区域居中，缩放时不藏到读数后面。 */
+.orbital-field {display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:12px}
+.orbital-field input {width:85px;font:12px var(--mono)}
+body.stellar .bottom-left,body.stellar .hotbar,body.stellar nav,body.stellar .coordinate,body.stellar .objective {display:none}
+body.stellar .location {background:none;border:0;padding:0;gap:11px}
+body.stellar .location strong {font-size:18px;letter-spacing:.03em;color:#e6eced}
+body.stellar .location small {color:#a3abb4;font-size:10px;letter-spacing:.14em}
+body.stellar .mini {color:#c4ab86;width:24px;height:24px}
+body.stellar .top-right button {background:#151a20d9;border-color:#929b9e41;color:#d6dde0}
+body.stellar #panel {--line:#a2b3c030;right:20px;top:72px;bottom:auto;max-height:calc(100dvh - 105px);width:min(276px,28vw);overflow:auto;
+ background:linear-gradient(108deg,#161b20ee,#10161be6);border:1px solid #82909d37;border-top:2px solid #b19b72;border-radius:2px;box-shadow:0 4px 30px #0004}
+body.stellar .panel-header {background:none;padding:11px 16px 10px;border-bottom:1px solid #a2b3c025}
+body.stellar .panel-header h2 {font-size:14px;letter-spacing:.09em}
+body.stellar .panel-header button {height:23px;width:23px;padding:0;border:0;background:none;color:#99a6ac}
+body.stellar .panel-body {padding:15px 16px 13px;overflow:visible;max-height:none}
+body.stellar .section-title {padding-top:11px;border-top:1px solid #a2b3c025;margin:14px 0 8px;color:#d6d9d9;letter-spacing:.07em;font-size:11px}
+body.stellar .recipe-line {margin:4px 0;color:#a8b6bc;font-size:12px}
+body.stellar .numbers {color:#e2dfd8;font-size:12px}
+body.stellar .power-dial small {font-size:11px;color:#c0bdaf;letter-spacing:.10em}
+body.stellar .power-dial strong {font:500 clamp(31px,2.8vw,38px)/1.13 var(--mono);letter-spacing:-.065em;color:#fff0cb}
+body.stellar .power-dial em {font:normal 13px var(--mono);color:#ddc49b}
+.power-composition {display:flex;width:100%;height:4px;gap:1px;overflow:hidden;background:#292f33;margin:10px 0 9px}
+.source-0 {background:#ddba77}.source-1 {background:#9faab1}.source-2 {background:#719aaf}
+.source-line {display:flex;align-items:center;justify-content:space-between;margin:3px 0;color:#bdc5c9;font-size:11px}
+.source-line span {display:flex;align-items:center;gap:8px}.source-line i {width:6px;height:6px}
+.source-line b,.build-progress b {font:500 12px var(--mono);color:#e7e5de}
+.build-progress {margin:8px 0 10px}.build-progress>div {display:flex;align-items:center;justify-content:space-between;color:#bcc3c5;font-size:12px}
+.build-progress small {color:#9ca8ad;font:11px var(--mono)}.build-progress>i {display:block;background:#56616a65;margin-top:4px;height:2px}
+.build-progress em {display:block;background:#b8aaa0;height:100%}
+.launch-ledger {border-top:1px solid #a2b3c025;margin-top:12px;padding-top:9px}.launch-ledger summary {font-size:11px;color:#b4bcc0;cursor:pointer}
+body.stellar input,body.stellar select,body.stellar .panel-body button {background:#242c33;border-color:#83939a50;color:#e3e6e4}
+body.stellar .panel-body .primary,body.stellar .panel-body .active {border-color:#ceb78f98;color:#ffe2b0}
+#stellar-dock {position:absolute;left:20px;bottom:19px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.dock-row,.drawing-row {display:flex;align-items:stretch;gap:2px}
+body.stellar .dock-btn,body.stellar .drawing-tool {font-size:12px;font-weight:500;border-radius:1px;border:1px solid #5c686e69;background:#10161bdb;color:#b4c0c4;padding:7px 13px}
+body.stellar .chosen {color:#ffe7bf;background:#353029e3;border-color:#c7ae82b5;box-shadow:inset 0 -2px #d4b278}
+body.stellar .drawing-tool {padding:5px 9px}.dock-btn kbd {font:10px var(--mono);color:#99a3a9}
+body.stellar .bottom-main {left:20px;transform:none;align-items:flex-start;bottom:61px;width:auto}
+body.stellar .tool-hint {background:transparent;color:#abb4b9;margin:0;padding:0;font-size:11px;text-shadow:0 1px 5px #000}
+body.stellar.designing .bottom-main {bottom:95px}
+body.stellar.panorama .bottom-main,body.stellar.panorama .top-right,body.stellar.panorama .top-left {display:none}
+body.stellar.panorama .dock-btn {opacity:.6}.panorama .dock-btn:hover {opacity:1}
+@media(max-width:700px){
+ body.stellar .top-left {top:12px;left:12px}body.stellar .location strong {font-size:13px}body.stellar .mini {display:none}
+ body.stellar .top-right {top:11px;right:10px}body.stellar .top-right button {height:26px;font-size:10px;padding:0 5px}
+ body.stellar #panel {top:55%;right:10px;left:10px;width:auto;bottom:66px;max-height:none}
+ body.stellar .panel-header {padding:5px 11px}body.stellar .panel-body {padding:7px 12px 13px}
+ body.stellar .bottom-main {display:none}#stellar-dock {left:10px;bottom:8px}body.stellar .dock-btn {padding:6px 9px}
+ body.stellar.designing #panel {bottom:76px}body.stellar .power-dial strong {font-size:27px}
+}
+/* 星图信息按原版沿画布两侧布置，资源表固定宽度，天体标线在剩余可用视野中投影。 */
+/* 观星时保留拍摄位置与退出键，地面热键栏会挡住地平线。 */
+body.sky-watch .objective,body.sky-watch .hotbar,body.sky-watch .bottom-main nav,body.sky-watch .bottom-left{display:none}
+body.sky-watch .bottom-main{bottom:16px}
+body.chart-view .coordinate,body.chart-view .objective,body.chart-view .hotbar,body.chart-view nav,body.chart-view .bottom-left{display:none}
+body.chart-view .location{background:transparent;border:0;filter:drop-shadow(0 2px 2px #0009)}
+body.chart-view .top-right button,body.chart-view .panel-body button{background:#17303ad4;border:1px solid #719ca84d;border-radius:2px}
+body.chart-view #panel{width:min(290px,32vw);right:16px;top:66px;bottom:auto;max-height:calc(100dvh - 85px);background:linear-gradient(105deg,#11242ce6,#0f2028ee);border:1px solid #99c8d038;border-top:2px solid #6e9fae;box-shadow:0 6px 32px #0004;border-radius:2px}
+body.chart-view .panel-body .primary{background:#27464a;color:#e0f5e9;border-color:#729997}
+body.chart-view .panel-header{padding:10px 15px;background:transparent}
+body.chart-view .panel-header h2{font-size:14px;letter-spacing:.08em}
+body.chart-view .panel-header button{border:0;background:none;color:#9eb3bc}
+body.chart-view .panel-body{padding:12px 15px 14px;max-height:calc(100dvh - 134px)}
+body.chart-view .section-title{font-size:11px;margin:13px 0 8px;border-top:1px solid #a6ced12c;padding-top:10px;color:#c3d7df}
+body.chart-view .recipe-line{font-size:12px;margin:4px 0;color:#a9bfc7}
+body.chart-view .numbers{color:#d9e9e8;font:500 12px var(--mono)}
+body.chart-view .note{padding:6px 0;border:0;background:transparent}
+.body-select{display:flex;align-items:center;gap:8px;font-size:11px;color:#9cb7c4}.body-select select{min-width:0;flex:1;font-size:12px}
+.chart-title{font-size:19px;font-weight:600;letter-spacing:.05em;margin:15px 0 2px;color:#f1ece2}
+.chart-sub{margin-bottom:11px;font-size:12px;color:#9fc3c6}.scan-item{display:flex;align-items:center;gap:7px}.scan-item img{width:21px;height:21px}
+#map-labels{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#map-labels .star-label{position:absolute;top:0;left:0;margin:0;padding:1px 4px;pointer-events:auto;white-space:nowrap;color:#acc5cb;background:#081119a1;border:0;border-radius:1px;font-size:11px;font-weight:500;line-height:14px;letter-spacing:.04em;text-shadow:0 1px 3px #000}
+#map-labels .star-label.selected{color:#ffe6ad;box-shadow:inset 0 -1px #bba171}
+#map-labels .star-label.home::after{content:' · 伊卡洛斯';color:#8be1c9}
+body.chart-view .tool-hint{background:transparent;color:#b3c1c7;text-shadow:1px 1px #000}
+body.chart-view.ship-follow #panel{display:none}body.ship-follow .bottom-main{bottom:100px}
+#flight-hud{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:min(440px,80vw);text-align:center;color:#ddeaf1;pointer-events:none;text-shadow:0 2px 5px #000}
+.flight-line{display:flex;align-items:center;justify-content:center;gap:18px}.flight-line>div{width:38%;display:flex;flex-direction:column;align-items:flex-end}.flight-line>div:last-child{align-items:flex-start}
+.flight-line small{font-size:10px;letter-spacing:.08em;color:#acc4ce}.flight-line b{font:500 25px var(--mono);letter-spacing:-.05em}
+.nav-reticle{width:39px;height:39px;border:1px solid #aee9ffb3;border-radius:50%;box-shadow:inset 0 0 12px #3289ac36,0 0 5px #54879b55;background:radial-gradient(circle,#e0cf954f 0 15%,transparent 18%)}
+#nav-target{font-size:11px;letter-spacing:.10em;margin:3px 0;color:#dbeaf2}.nav-rail{height:4px;background:#8faec542;transform:skewX(-18deg)}.nav-rail i{display:block;background:#acc8df;height:100%}
+@media(max-width:700px){body.chart-view #panel{width:calc(100% - 20px);max-height:44dvh;top:auto;right:10px;bottom:7px}body.chart-view .panel-body{max-height:calc(44dvh - 45px)}body.chart-view .tool-hint{display:none}body.chart-view .top-left{top:51px}body.chart-view .top-right{top:8px}}
+.cluster-size{display:flex;align-items:center;gap:16px;font-size:12px;color:#abc3c7;margin:6px 0 12px}.cluster-size select{color:#d6e8e8;background:#11222b;border:1px solid #35505b;padding:3px 8px;border-radius:3px}
+/* 游戏世界里的文字随天体投影定位；只有标牌按钮接收鼠标，透明区域让出给地表选取。 */
+#beacon-labels{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#beacon-labels .holo-label{position:absolute;left:0;top:0;max-width:210px;padding:2px 5px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:0 4px;pointer-events:auto;background:#101e20c9;color:#f0f8ee;border:0;border-left:2px solid var(--beam);font-size:11px;text-align:left;border-radius:1px;line-height:1.35;white-space:nowrap}
+.holo-label[hidden]{display:none!important}.holo-label.rear{opacity:.65}.holo-label i{color:var(--beam);font-style:normal}.holo-label .item-icon,.signal-notes .item-icon{width:16px;height:16px;vertical-align:middle}.holo-label small{grid-column:1 / -1;font-size:10px;white-space:pre-line}.holo-label span,.holo-label small{overflow:hidden;text-overflow:ellipsis}
+.signal-head,.signal-field,.signal-row{display:flex;gap:10px;align-items:center}.signal-head{padding:8px 0 12px}.signal-head>i{color:var(--signal);font-size:34px;line-height:1;font-style:normal}.signal-head h3{margin:0 0 3px}.signal-head small,.signal-row small{color:#a7bdc1}.signal-field{display:grid;grid-template-columns:minmax(90px,.85fr) minmax(0,1.3fr);font-size:12px;margin:8px 0}.signal-field input,.signal-field textarea,.signal-field select{min-width:0;width:100%;font:inherit;color:inherit;background:#122934;border:1px solid #38505a;border-radius:3px;padding:4px}.signal-field input[type=color]{height:26px;padding:2px}.signal-field textarea{resize:vertical}.signal-field input[type=range]{padding:0;border:0;accent-color:#8ee0c7}.signal-range{display:grid;grid-template-columns:1fr 46px;align-items:center;gap:6px}.signal-range output{font-family:monospace;text-align:right}
+.signal-row{width:100%;text-align:left;margin:3px 0;padding:8px}.signal-row i{width:6px;height:22px}.signal-row b,.signal-row small{display:block}.signal-notes{border-left:2px solid #7f9f9b;padding:5px 8px;margin:10px 0;overflow-wrap:anywhere}.signal-task{display:block;text-align:left}.signal-task.done{text-decoration:line-through;color:#91a29c}
+
+

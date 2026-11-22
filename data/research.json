@@ -1,0 +1,747 @@
+{
+  "df-digital-analog-computation": {"hashes":24000,"cost":{"df-dark-fog-matrix":800}},
+  "df-high-density-controlled-annihilation": {"hashes":60000,"cost":{"df-dark-fog-matrix":2000}},
+  "df-jammer-tower-tech": {"hashes":144000,"cost":{"electromagnetic-matrix":400,"energy-matrix":800}},
+  "df-matter-recombination": {"hashes":18000,"cost":{"df-dark-fog-matrix":600}},
+  "df-negentropy-recursion": {"hashes":36000,"cost":{"df-dark-fog-matrix":1200}},
+  "df-suppressing-capsule-tech": {"hashes":216000,"cost":{"electromagnetic-matrix":600,"energy-matrix":600,"structure-matrix":600}},
+  "df-dark-fog-lens-tech": {"hashes":30000,"cost":{"df-dark-fog-matrix":1000}},
+  "holo-beacon-tech": {
+    "hashes": 18000,
+    "cost": { "electromagnetic-matrix": 100 }
+  },
+  "applied-superconductor": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400
+    }
+  },
+  "artificial-star-technology": {
+    "hashes": 432000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "energy-matrix": 1200,
+      "structure-matrix": 1200,
+      "information-matrix": 1200,
+      "gravity-matrix": 1200
+    }
+  },
+  "automatic-metallurgy": {
+    "hashes": 1800,
+    "cost": {
+      "magnetic-coil": 10,
+      "circuit-board": 10
+    }
+  },
+  "basic-assembling-processes": {
+    "hashes": 1800,
+    "cost": {
+      "circuit-board": 10,
+      "gear": 10
+    }
+  },
+  "basic-chemical-engineering": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 200
+    }
+  },
+  "basic-logistics-system": {
+    "hashes": 1800,
+    "cost": {
+      "circuit-board": 10,
+      "gear": 10
+    }
+  },
+  "casimir-crystal-technology": {
+    "hashes": 240000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 800
+    }
+  },
+  "controlled-annihilation-reaction": {
+    "hashes": 600000,
+    "cost": {
+      "energy-matrix": 4000,
+      "gravity-matrix": 2000
+    }
+  },
+  "crystal-smelting": {
+    "hashes": 90000,
+    "cost": {
+      "electromagnetic-matrix": 500,
+      "energy-matrix": 500
+    }
+  },
+  "deuterium-fractionation-technology": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 200,
+      "energy-matrix": 300
+    }
+  },
+  "df-antimatter-capsule-tech": {
+    "hashes": 540000,
+    "cost": {
+      "electromagnetic-matrix": 3000,
+      "energy-matrix": 3000,
+      "structure-matrix": 3000,
+      "information-matrix": 3000,
+      "gravity-matrix": 3000
+    }
+  },
+  "df-attack-drone-tech": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 500,
+      "energy-matrix": 500,
+      "structure-matrix": 500
+    }
+  },
+  "df-battlefield-analysis-base-tech": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 100
+    }
+  },
+  "df-combustible-unit-tech": {
+    "hashes": 21600,
+    "cost": {
+      "electromagnetic-matrix": 120
+    }
+  },
+  "df-corvette-tech": {
+    "hashes": 216000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600,
+      "structure-matrix": 600,
+      "information-matrix": 600
+    }
+  },
+  "df-crystal-explosive-unit-tech": {
+    "hashes": 216000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600,
+      "structure-matrix": 600,
+      "information-matrix": 300
+    }
+  },
+  "df-crystal-shell-set-tech": {
+    "hashes": 288000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 800,
+      "information-matrix": 800
+    }
+  },
+  "df-destroyer-tech": {
+    "hashes": 288000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 800,
+      "information-matrix": 800,
+      "gravity-matrix": 800
+    }
+  },
+  "df-engine-tech": {
+    "hashes": 7200,
+    "cost": {
+      "electromagnetic-matrix": 20
+    }
+  },
+  "df-explosive-unit-tech": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 200
+    }
+  },
+  "df-gravity-missile-set-tech": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 1000,
+      "structure-matrix": 1000,
+      "information-matrix": 1000,
+      "gravity-matrix": 1000
+    }
+  },
+  "df-high-explosive-shell-set-tech": {
+    "hashes": 144000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 400
+    }
+  },
+  "df-implosion-cannon-tech": {
+    "hashes": 108000,
+    "cost": {
+      "electromagnetic-matrix": 300,
+      "energy-matrix": 300
+    }
+  },
+  "df-missile-turret-tech": {
+    "hashes": 54000,
+    "cost": {
+      "electromagnetic-matrix": 150
+    }
+  },
+  "df-planetary-defense-system": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600
+    }
+  },
+  "df-plasma-turret-tech": {
+    "hashes": 300000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 1000,
+      "structure-matrix": 1000,
+      "information-matrix": 500
+    }
+  },
+  "df-precision-drone-tech": {
+    "hashes": 144000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 400
+    }
+  },
+  "df-prototype-tech": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 200
+    }
+  },
+  "df-signal-tower-tech": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 400
+    }
+  },
+  "df-superalloy-ammo-box-tech": {
+    "hashes": 216000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600,
+      "structure-matrix": 300
+    }
+  },
+  "df-supersonic-missile-set-tech": {
+    "hashes": 240000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 200
+    }
+  },
+  "df-titanium-ammo-box-tech": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600
+    }
+  },
+  "df-weapon-system": {
+    "hashes": 7200,
+    "cost": {
+      "electromagnetic-matrix": 20
+    }
+  },
+  "dirac-inversion-mechanism": {
+    "hashes": 540000,
+    "cost": {
+      "electromagnetic-matrix": 3000,
+      "energy-matrix": 3000,
+      "structure-matrix": 750,
+      "information-matrix": 750,
+      "gravity-matrix": 1500
+    }
+  },
+  "distribution-logistics-system": {
+    "hashes": 108000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 300
+    }
+  },
+  "dyson-sphere-stress-system-1": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 2000,
+      "energy-matrix": 2000,
+      "structure-matrix": 2000,
+      "information-matrix": 2000,
+      "gravity-matrix": 2000
+    }
+  },
+  "electromagnetic-drive": {
+    "hashes": 9000,
+    "cost": {
+      "electromagnetic-matrix": 50
+    }
+  },
+  "electromagnetic-matrix-technology": {
+    "hashes": 1800,
+    "cost": {
+      "magnetic-coil": 10,
+      "circuit-board": 10
+    }
+  },
+  "electromagnetism": {
+    "hashes": 1200,
+    "cost": {
+      "magnetic-coil": 10
+    }
+  },
+  "energy-matrix-technology": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 200
+    }
+  },
+  "energy-storage": {
+    "hashes": 108000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600
+    }
+  },
+  "environment-modification": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400
+    }
+  },
+  "fluid-storage-encapsulation": {
+    "hashes": 9000,
+    "cost": {
+      "electromagnetic-matrix": 50
+    }
+  },
+  "gas-giants-exploitation": {
+    "hashes": 432000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "energy-matrix": 1200,
+      "structure-matrix": 1200
+    }
+  },
+  "geothermal-extraction": {
+    "hashes": 144000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800
+    }
+  },
+  "gravitational-wave-refraction": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "energy-matrix": 1200,
+      "structure-matrix": 1200
+    }
+  },
+  "gravity-matrix-technology": {
+    "hashes": 576000,
+    "cost": {
+      "electromagnetic-matrix": 1600,
+      "energy-matrix": 1600,
+      "structure-matrix": 1600
+    }
+  },
+  "high-efficiency-logistics-system": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 100
+    }
+  },
+  "high-efficiency-plasma-control": {
+    "hashes": 9000,
+    "cost": {
+      "electromagnetic-matrix": 50
+    }
+  },
+  "high-speed-assembling-processes": {
+    "hashes": 108000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 300
+    }
+  },
+  "high-strength-crystal": {
+    "hashes": 108000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600
+    }
+  },
+  "high-strength-glass": {
+    "hashes": 240000,
+    "cost": {
+      "energy-matrix": 800,
+      "structure-matrix": 400
+    }
+  },
+  "high-strength-lightweight-structure": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "structure-matrix": 200
+    }
+  },
+  "high-strength-material": {
+    "hashes": 135000,
+    "cost": {
+      "energy-matrix": 600,
+      "structure-matrix": 150
+    }
+  },
+  "high-strength-titanium-alloy": {
+    "hashes": 144000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 80
+    }
+  },
+  "hydrogen-fuel-rod-technology": {
+    "hashes": 72000,
+    "cost": {
+      "energy-matrix": 400
+    }
+  },
+  "improved-logistics-system": {
+    "hashes": 18000,
+    "cost": {
+      "electromagnetic-matrix": 100
+    }
+  },
+  "information-matrix-technology": {
+    "hashes": 288000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800
+    }
+  },
+  "integrated-logistics-system": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 500,
+      "structure-matrix": 50
+    }
+  },
+  "interstellar-logistics-system": {
+    "hashes": 216000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "energy-matrix": 1200,
+      "structure-matrix": 120
+    }
+  },
+  "interstellar-power-transmission": {
+    "hashes": 216000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "energy-matrix": 1200,
+      "structure-matrix": 120
+    }
+  },
+  "magnetic-levitation-technology": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 100
+    }
+  },
+  "magnetic-particle-trap": {
+    "hashes": 288000,
+    "cost": {
+      "electromagnetic-matrix": 1600,
+      "energy-matrix": 800
+    }
+  },
+  "mesoscopic-quantum-entanglement": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 1000,
+      "structure-matrix": 1000,
+      "information-matrix": 1000
+    }
+  },
+  "mini-fusion-power-generation": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 500,
+      "structure-matrix": 250
+    }
+  },
+  "miniature-particle-collider-technology": {
+    "hashes": 240000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 800
+    }
+  },
+  "mission-completed": {
+    "hashes": 3600000,
+    "cost": {
+      "universe-matrix": 4000
+    }
+  },
+  "particle-control-technology": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 200
+    }
+  },
+  "photon-frequency-conversion": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 200,
+      "energy-matrix": 200
+    }
+  },
+  "photon-spotlight-mining-technology": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 1000,
+      "structure-matrix": 1000,
+      "information-matrix": 1000,
+      "gravity-matrix": 600
+    }
+  },
+  "plane-filter-smelting-technology": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 1000,
+      "structure-matrix": 1000,
+      "information-matrix": 1000
+    }
+  },
+  "planetary-ionosphere-utilization": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 2000,
+      "energy-matrix": 2000,
+      "structure-matrix": 2000,
+      "gravity-matrix": 2000
+    }
+  },
+  "planetary-logistics-system": {
+    "hashes": 144000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 400
+    }
+  },
+  "plasma-extract-refining": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 100
+    }
+  },
+  "polymer-chemical-engineering": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 400
+    }
+  },
+  "processor-technology": {
+    "hashes": 144000,
+    "cost": {
+      "electromagnetic-matrix": 800
+    }
+  },
+  "proliferator-1-technology": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 200
+    }
+  },
+  "proliferator-2-technology": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 600
+    }
+  },
+  "proliferator-3-technology": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 600,
+      "structure-matrix": 400
+    }
+  },
+  "quantum-chip-technology": {
+    "hashes": 288000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "information-matrix": 800
+    }
+  },
+  "quantum-printing-technology": {
+    "hashes": 288000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 800,
+      "information-matrix": 800
+    }
+  },
+  "ray-receiver-technology": {
+    "hashes": 108000,
+    "cost": {
+      "electromagnetic-matrix": 600,
+      "energy-matrix": 600
+    }
+  },
+  "reforming-refine-technology": {
+    "hashes": 90000,
+    "cost": {
+      "electromagnetic-matrix": 500,
+      "energy-matrix": 500
+    }
+  },
+  "reinforced-thruster-technology": {
+    "hashes": 288000,
+    "cost": {
+      "energy-matrix": 1600
+    }
+  },
+  "satellite-power-distribution-system": {
+    "hashes": 240000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800,
+      "structure-matrix": 800
+    }
+  },
+  "semiconductor-material": {
+    "hashes": 18000,
+    "cost": {
+      "electromagnetic-matrix": 200
+    }
+  },
+  "smelting-purification": {
+    "hashes": 18000,
+    "cost": {
+      "electromagnetic-matrix": 100
+    }
+  },
+  "solar-collection": {
+    "hashes": 18000,
+    "cost": {
+      "electromagnetic-matrix": 200
+    }
+  },
+  "solar-sail-orbit-system": {
+    "hashes": 54000,
+    "cost": {
+      "electromagnetic-matrix": 300,
+      "energy-matrix": 300
+    }
+  },
+  "steel-smelting": {
+    "hashes": 21600,
+    "cost": {
+      "electromagnetic-matrix": 120
+    }
+  },
+  "strange-matter-technology": {
+    "hashes": 300000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 1000,
+      "structure-matrix": 1000
+    }
+  },
+  "structure-matrix-technology": {
+    "hashes": 240000,
+    "cost": {
+      "electromagnetic-matrix": 800,
+      "energy-matrix": 800
+    }
+  },
+  "super-magnetic-field-generator": {
+    "hashes": 180000,
+    "cost": {
+      "electromagnetic-matrix": 1000,
+      "energy-matrix": 250
+    }
+  },
+  "thermal-power": {
+    "hashes": 5400,
+    "cost": {
+      "electromagnetic-matrix": 30
+    }
+  },
+  "thruster-technology": {
+    "hashes": 180000,
+    "cost": {
+      "energy-matrix": 1000
+    }
+  },
+  "titanium-smelting": {
+    "hashes": 36000,
+    "cost": {
+      "electromagnetic-matrix": 200,
+      "energy-matrix": 200
+    }
+  },
+  "universe-matrix-technology": {
+    "hashes": 720000,
+    "cost": {
+      "electromagnetic-matrix": 2000,
+      "energy-matrix": 2000,
+      "structure-matrix": 2000,
+      "information-matrix": 2000,
+      "gravity-matrix": 2000
+    }
+  },
+  "vertical-launching-silo-technology": {
+    "hashes": 576000,
+    "cost": {
+      "electromagnetic-matrix": 1600,
+      "energy-matrix": 1600,
+      "structure-matrix": 1600,
+      "information-matrix": 1600
+    }
+  },
+  "wave-function-interference": {
+    "hashes": 360000,
+    "cost": {
+      "electromagnetic-matrix": 1200,
+      "energy-matrix": 1200,
+      "information-matrix": 200
+    }
+  },
+  "x-ray-cracking-technology": {
+    "hashes": 72000,
+    "cost": {
+      "electromagnetic-matrix": 400,
+      "energy-matrix": 400
+    }
+  }
+}

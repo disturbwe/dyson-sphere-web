@@ -1,0 +1,107 @@
+[
+  {
+    "level": 0,
+    "items": [
+      "log",
+      "plant-fuel",
+      "iron-ingot",
+      "copper-ingot",
+      "stone-brick",
+      "magnet"
+    ]
+  },
+  {
+    "level": 3,
+    "items": [
+      "high-purity-silicon",
+      "titanium-ingot",
+      "energetic-graphite",
+      "steel",
+      "glass",
+      "prism",
+      "gear",
+      "magnetic-coil",
+      "circuit-board",
+      "df-engine",
+      "df-energy-shard"
+    ]
+  },
+  {
+    "level": 6,
+    "items": [
+      "diamond",
+      "electric-motor",
+      "microcrystalline-component",
+      "plasma-exciter",
+      "plastic",
+      "df-combustible-unit",
+      "foundation"
+    ]
+  },
+  {
+    "level": 9,
+    "items": [
+      "crystal-silicon",
+      "electromagnetic-turbine",
+      "processor",
+      "photon-combiner",
+      "hydrogen",
+      "graphene",
+      "titanium-crystal",
+      "thruster"
+    ]
+  },
+  {
+    "level": 12,
+    "items": [
+      "df-dark-fog-matrix",
+      "titanium-alloy",
+      "titanium-glass",
+      "super-magnetic-ring",
+      "hydrogen-fuel-rod",
+      "carbon-nanotube",
+      "df-explosive-unit"
+    ]
+  },
+  {
+    "level": 15,
+    "items": [
+      "df-matter-recombinator",
+      "optical-grating-crystal",
+      "particle-container",
+      "particle-broadband",
+      "deuterium",
+      "casimir-crystal",
+      "reinforced-thruster"
+    ]
+  },
+  {
+    "level": 18,
+    "items": [
+      "df-silicon-based-neuron",
+      "strange-matter",
+      "plane-filter",
+      "deuteron-fuel-rod",
+      "df-crystal-explosive-unit"
+    ]
+  },
+  {
+    "level": 21,
+    "items": [
+      "df-negentropy-singularity",
+      "quantum-chip",
+      "antimatter",
+      "graviton-lens",
+      "space-warper",
+      "annihilation-constraint-sphere"
+    ]
+  },
+  {
+    "level": 24,
+    "items": [
+      "df-core-element",
+      "unipolar-magnet",
+      "antimatter-fuel-rod"
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark"><title>戴森球计划 · 行星工厂</title><style>/*__STYLE__*/</style><style>/*__STELLAR_STYLE__*/</style><style>/*__STATION_STYLE__*/</style><style>/*__TECH_STYLE__*/</style><style>/*__GALAXY_STYLE__*/</style><style>/*__STATS_STYLE__*/</style></head><body>
+<canvas id="world" aria-label="三维行星地表，可点击矿脉、设施或移动目标"></canvas>
+<div id="boot" role="status">正在生成行星地表…</div>
+<main id="menu" hidden>
+ <div class="menubar"><span class="orbit-mark" aria-hidden="true"></span><span>行星工程</span><span class="menubar-rule"></span><small>3D 网页版</small></div>
+ <section class="launch">
+ <div class="en-title">DYSON SPHERE PROGRAM</div><h1>戴森球计划</h1>
+ <p class="lead">从第一块铁矿，到一颗恒星的能量。</p>
+ <div class="seedline"><label for="seed">星区种子</label><input id="seed" type="number" min="1" max="99999999" inputmode="numeric" value="747183" aria-label="星区种子"><button data-action="seed" title="更换种子" aria-label="更换种子">⟳</button></div>
+ <label class="cluster-size">星团规模 <select id="star-count" aria-label="星团规模"><option value="32">32 颗恒星</option><option value="48">48 颗恒星</option><option value="64" selected>64 颗恒星</option></select></label>
+ <label class="cluster-size">资源倍率 <select id="resource-mode" aria-label="资源倍率"><option>1×</option></select></label>
+ <label class="cluster-size">黑雾活跃度 <select id="fog-mode" aria-label="黑雾活跃度"><option value="off">和平</option><option value="passive">被动</option><option value="normal" selected>正常</option><option value="sharp">好战</option></select></label>
+ <div class="sector-preview"><span>星区地址 <b id="sector-address"></b></span><span>元数据 <b id="sector-yield"></b></span></div>
+ <div class="launch-actions">
+ <button class="launch-primary" data-action="new" data-id="landing">开始着陆 <span>↗</span></button>
+ <button id="continue" class="launch-other" data-action="continue" hidden>继续上次进度 <span>⏵</span></button>
+ <button class="launch-other" data-action="new" data-id="sandbox">沙盒 · 恒星工程 <span>☉</span></button>
+ <div class="lesson-select"><select aria-label="教学工厂" id="lesson-select"><option value="foundry">自动冶炼线</option><option value="refit">产线原位换装</option><option value="defense">黑雾地面防守</option><option value="shield">行星护盾与中继</option><option value="signal">信号前哨与轨道拦截</option><option value="relic">黑雾样本与透镜</option><option value="veins">矿物利用与连续研究</option><option value="mining">大型采矿机与本地提货</option><option value="geology">异星地质勘查</option><option value="coast">海岸整地与填海</option><option value="sorting">双矿分流与筛选</option><option value="bridge">立体交叉输送</option><option value="piling">集装与流速监测</option><option value="coating">喷涂与冶炼对照</option><option value="distribution">仓储与机甲配送</option><option value="blueprint">蓝图与建设机</option><option value="refinery">原油精炼与分馏</option><option value="freight">跨星球物流线</option><option value="energy">跨星球输电</option><option value="gas">巨星轨道采集</option><option value="mission">宇宙矩阵与主线交付</option></select><button data-action="lesson">进入教学工厂 <span>→</span></button></div>
+ </div>
+ </section><div class="planet-caption"><i></i><span>初始行星</span><strong>地中海</strong></div>
+ <footer class="menufooter"><button class="galaxy-launch" data-action="galaxy">银河系 · 本机记录 ↗</button><span>离线单人游戏</span><span>鼠标及键盘操作</span></footer>
+</main>
+<div id="hud" hidden>
+ <div class="top-left"><div class="location"><span class="orbit-mark mini" aria-hidden="true"></span><span><small id="sector"></small><strong id="location-title">地中海 · 着陆区</strong></span></div><div id="coordinate" class="coordinate"></div></div>
+ <div class="top-right"><button id="flight-mode" data-action="flight" hidden>低空飞行 G</button><button data-action="watch-sky" id="sky-mode" title="在地表仰望恒星 H">观星 H</button><button data-action="chart" id="chart-mode" title="星图 U">星图 U</button><button data-action="sphere" id="sphere-mode" title="戴森球编辑器 Y">戴森球 Y</button><button data-action="view" title="行星视图 M" id="view-mode"></button><button data-action="speed" title="切换模拟速度" id="speed"></button><button data-action="panel" data-id="system" title="系统菜单 Esc" aria-label="系统菜单">☰</button></div>
+ <div id="map-labels" hidden></div><div id="beacon-labels" hidden></div>
+ <div id="stellar-dock" role="group" aria-label="恒星视图工具" hidden></div>
+ <div id="flight-hud" aria-label="航行遥测" hidden><div class="flight-line"><div><small>航行速度 · m/s</small><b id="nav-speed"></b></div><i class="nav-reticle"></i><div><small>目标距离 · AU</small><b id="nav-range"></b></div></div><div id="nav-target"></div><div class="nav-rail"><i id="nav-energy"></i></div></div>
+ <div id="objective" class="objective"></div>
+ <div id="hover" class="tooltip-world" hidden></div><div id="toast" class="toast" role="status" hidden></div>
+ <div class="bottom-left"><div class="mecha-row"><b>伊卡洛斯</b><span id="energy-text"></span></div><div class="meter energy"><i id="energy"></i></div><div class="smallmetrics"><span id="grid-text"></span><span id="clock"></span></div></div>
+ <div class="bottom-main"><div id="tool-hint" class="tool-hint"></div><div id="hotbar" class="hotbar"></div><nav id="nav"></nav></div>
+</div><aside id="panel" hidden></aside><section id="research-desk" aria-label="科技树" hidden></section><input type="file" accept=".json,application/json" id="import" hidden><input id="bp-file" type="file" accept=".json,application/json" hidden><input id="layer-file" type="file" accept=".json,application/json" hidden>
+<dialog hidden id="galaxy" aria-labelledby="galaxy-title"><canvas aria-label="可平移和缩放的银河星区图" data-sky="__GALAXY_SKY__"></canvas><header><h1 id="galaxy-title">银河系</h1><div class="galaxy-summary"></div></header><article class="galaxy-brief"></article><footer>拖动平移　·　滚轮缩放</footer><button class="galaxy-close" data-galaxy="close">返回 <kbd>Esc</kbd></button></dialog>
+<script>/*__GAME__*/</script></body></html>

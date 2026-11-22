@@ -1,0 +1,531 @@
+{
+  "df-jammer-tower-tech": [5,18,1810],
+  "df-suppressing-capsule-tech": [9,18,1824],
+  "df-dark-fog-lens-tech": [12,6,1509],
+  "holo-beacon-tech": [3,13,1105],
+ "dsp-program": [
+  0,
+  5,
+  1
+ ],
+ "electromagnetism": [
+  1,
+  5,
+  1001
+ ],
+ "electromagnetic-matrix-technology": [
+  2,
+  5,
+  1002
+ ],
+ "high-efficiency-plasma-control": [
+  2,
+  12,
+  1101
+ ],
+ "plasma-extract-refining": [
+  3,
+  12,
+  1102
+ ],
+ "x-ray-cracking-technology": [
+  5,
+  12,
+  1103
+ ],
+ "reforming-refine-technology": [
+  6,
+  12,
+  1104
+ ],
+ "energy-matrix-technology": [
+  4,
+  13,
+  1111
+ ],
+ "hydrogen-fuel-rod-technology": [
+  5,
+  13,
+  1112
+ ],
+ "thruster-technology": [
+  6,
+  13,
+  1113
+ ],
+ "reinforced-thruster-technology": [
+  7,
+  13,
+  1114
+ ],
+ "fluid-storage-encapsulation": [
+  2,
+  11,
+  1120
+ ],
+ "basic-chemical-engineering": [
+  4,
+  11,
+  1121
+ ],
+ "polymer-chemical-engineering": [
+  5,
+  11,
+  1122
+ ],
+ "high-strength-crystal": [
+  6,
+  11,
+  1123
+ ],
+ "structure-matrix-technology": [
+  7,
+  11,
+  1124
+ ],
+ "casimir-crystal-technology": [
+  8,
+  11,
+  1125
+ ],
+ "high-strength-glass": [
+  8,
+  10,
+  1126
+ ],
+ "applied-superconductor": [
+  5,
+  10,
+  1131
+ ],
+ "high-strength-material": [
+  7,
+  10,
+  1132
+ ],
+ "particle-control-technology": [
+  8,
+  9,
+  1133
+ ],
+ "deuterium-fractionation-technology": [
+  4,
+  9,
+  1134
+ ],
+ "wave-function-interference": [
+  9,
+  11,
+  1141
+ ],
+ "miniature-particle-collider-technology": [
+  8,
+  13,
+  1142
+ ],
+ "strange-matter-technology": [
+  9,
+  13,
+  1143
+ ],
+ "artificial-star-technology": [
+  14,
+  6,
+  1144
+ ],
+ "controlled-annihilation-reaction": [
+  13,
+  6,
+  1145
+ ],
+ "proliferator-1-technology": [
+  4,
+  8,
+  1151
+ ],
+ "proliferator-2-technology": [
+  6,
+  8,
+  1152
+ ],
+ "proliferator-3-technology": [
+  8,
+  8,
+  1153
+ ],
+ "basic-assembling-processes": [
+  2,
+  6,
+  1201
+ ],
+ "high-speed-assembling-processes": [
+  6,
+  6,
+  1202
+ ],
+ "quantum-printing-technology": [
+  11,
+  6,
+  1203
+ ],
+ "processor-technology": [
+  5,
+  7,
+  1302
+ ],
+ "quantum-chip-technology": [
+  10,
+  10,
+  1303
+ ],
+ "photon-spotlight-mining-technology": [
+  11,
+  10,
+  1304
+ ],
+ "mesoscopic-quantum-entanglement": [
+  11,
+  13,
+  1305
+ ],
+ "semiconductor-material": [
+  3,
+  7,
+  1311
+ ],
+ "information-matrix-technology": [
+  9,
+  7,
+  1312
+ ],
+ "automatic-metallurgy": [
+  2,
+  4,
+  1401
+ ],
+ "smelting-purification": [
+  3,
+  4,
+  1402
+ ],
+ "crystal-smelting": [
+  4,
+  4,
+  1403
+ ],
+ "steel-smelting": [
+  3,
+  2,
+  1411
+ ],
+ "thermal-power": [
+  3,
+  9,
+  1412
+ ],
+ "titanium-smelting": [
+  5,
+  2,
+  1413
+ ],
+ "high-strength-titanium-alloy": [
+  7,
+  2,
+  1414
+ ],
+ "environment-modification": [
+  4,
+  3,
+  1415
+ ],
+ "mini-fusion-power-generation": [
+  7,
+  9,
+  1416
+ ],
+ "plane-filter-smelting-technology": [
+  10,
+  11,
+  1417
+ ],
+ "solar-collection": [
+  4,
+  5,
+  1501
+ ],
+ "photon-frequency-conversion": [
+  5,
+  5,
+  1502
+ ],
+ "solar-sail-orbit-system": [
+  6,
+  5,
+  1503
+ ],
+ "ray-receiver-technology": [
+  7,
+  5,
+  1504
+ ],
+ "planetary-ionosphere-utilization": [
+  11,
+  5,
+  1505
+ ],
+ "dirac-inversion-mechanism": [
+  12,
+  5,
+  1506
+ ],
+ "universe-matrix-technology": [
+  15,
+  5,
+  1507
+ ],
+ "mission-completed": [
+  16,
+  5,
+  1508
+ ],
+ "energy-storage": [
+  5,
+  3,
+  1511
+ ],
+ "interstellar-power-transmission": [
+  8,
+  3,
+  1512
+ ],
+ "geothermal-extraction": [
+  6,
+  4,
+  1513
+ ],
+ "high-strength-lightweight-structure": [
+  7,
+  4,
+  1521
+ ],
+ "vertical-launching-silo-technology": [
+  10,
+  4,
+  1522
+ ],
+ "dyson-sphere-stress-system-1": [
+  11,
+  4,
+  1523
+ ],
+ "basic-logistics-system": [
+  2,
+  0,
+  1601
+ ],
+ "improved-logistics-system": [
+  4,
+  0,
+  1602
+ ],
+ "high-efficiency-logistics-system": [
+  5,
+  0,
+  1603
+ ],
+ "planetary-logistics-system": [
+  6,
+  0,
+  1604
+ ],
+ "interstellar-logistics-system": [
+  8,
+  0,
+  1605
+ ],
+ "gas-giants-exploitation": [
+  9,
+  2,
+  1606
+ ],
+ "integrated-logistics-system": [
+  7,
+  1,
+  1607
+ ],
+ "distribution-logistics-system": [
+  5,
+  1,
+  1608
+ ],
+ "electromagnetic-drive": [
+  2,
+  14,
+  1701
+ ],
+ "magnetic-levitation-technology": [
+  4,
+  14,
+  1702
+ ],
+ "magnetic-particle-trap": [
+  6,
+  14,
+  1703
+ ],
+ "gravitational-wave-refraction": [
+  10,
+  14,
+  1704
+ ],
+ "gravity-matrix-technology": [
+  11,
+  14,
+  1705
+ ],
+ "super-magnetic-field-generator": [
+  5,
+  15,
+  1711
+ ],
+ "satellite-power-distribution-system": [
+  8,
+  15,
+  1712
+ ],
+ "df-weapon-system": [
+  2,
+  17,
+  1801
+ ],
+ "df-combustible-unit-tech": [
+  3,
+  3,
+  1802
+ ],
+ "df-explosive-unit-tech": [
+  7,
+  12,
+  1803
+ ],
+ "df-crystal-explosive-unit-tech": [
+  9,
+  12,
+  1804
+ ],
+ "df-engine-tech": [
+  2,
+  16,
+  1805
+ ],
+ "df-missile-turret-tech": [
+  4,
+  17,
+  1806
+ ],
+ "df-implosion-cannon-tech": [
+  5,
+  17,
+  1807
+ ],
+ "df-signal-tower-tech": [
+  5,
+  16,
+  1808
+ ],
+ "df-planetary-defense-system": [
+  7,
+  17,
+  1809
+ ],
+ "df-plasma-turret-tech": [
+  9,
+  17,
+  1811
+ ],
+ "df-titanium-ammo-box-tech": [
+  6,
+  18,
+  1812
+ ],
+ "df-superalloy-ammo-box-tech": [
+  7,
+  18,
+  1813
+ ],
+ "df-high-explosive-shell-set-tech": [
+  7,
+  16,
+  1814
+ ],
+ "df-supersonic-missile-set-tech": [
+  8,
+  16,
+  1815
+ ],
+ "df-crystal-shell-set-tech": [
+  9,
+  16,
+  1816
+ ],
+ "df-gravity-missile-set-tech": [
+  11,
+  16,
+  1817
+ ],
+ "df-antimatter-capsule-tech": [
+  14,
+  17,
+  1818
+ ],
+ "df-prototype-tech": [
+  4,
+  19,
+  1819
+ ],
+ "df-precision-drone-tech": [
+  5,
+  19,
+  1820
+ ],
+ "df-attack-drone-tech": [
+  7,
+  20,
+  1821
+ ],
+ "df-corvette-tech": [
+  9,
+  19,
+  1822
+ ],
+ "df-destroyer-tech": [
+  11,
+  20,
+  1823
+ ],
+ "df-battlefield-analysis-base-tech": [
+  3,
+  19,
+  1826
+ ],
+ "df-digital-analog-computation": [
+  10,
+  7,
+  1901
+ ],
+ "df-matter-recombination": [
+  12,
+  6,
+  1902
+ ],
+ "df-negentropy-recursion": [
+  11,
+  11,
+  1903
+ ],
+ "df-high-density-controlled-annihilation": [
+  14,
+  7,
+  1904
+ ]
+}
