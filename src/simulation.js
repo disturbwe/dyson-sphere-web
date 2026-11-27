@@ -1,3 +1,4 @@
+import {advanceLift} from './surface-motion.js';
 import {flow,recordFlow,recordBatch} from './production-log.js';
 import {sorterDemand,runSorter} from './sorter-motion.js';
 import {receiveStock} from './stock.js';
@@ -24,7 +25,7 @@ import {sampleMatrices} from './matrix-meter.js';
 import {drawOil} from './oil.js';
 import {largeMiner,mineCapacity,mineRoom,mineDuty,mineLoad,minePorts,receiveMineBelts,feedMineBelts} from './advanced-miner.js';
 import {collector,runCollector,workGas} from './gas.js';
-import {advanceFlight,sphereOf} from './navigation.js';
+import {advanceFlight,leaveAtmosphere,sphereOf} from './navigation.js';
 import {bodyOf,homeSystemOf} from './cluster.js';
 import {photovoltaicFactor,skyAt,sunCosine} from './ephemeris.js';
 import {capabilitiesOf} from './upgrades.js';
@@ -168,7 +169,7 @@ export function walk(s,dx,dy,dt){
   m.x=wrap(m.x+dx/length*speed*dt/Math.max(.13,Math.cos(m.y*ANGLE)));
   m.y=clamp(m.y+dy/length*speed*dt,-44.5,44.5);m.heading=Math.atan2(dx,dy);m.energy=Math.max(0,m.energy-(m.flying?.52:.07)*dt);
 }
-function tickMecha(s,dt){
+function tickMecha(s,dt,liftAxis){
   const m=s.mecha,limits=capabilitiesOf(s);if(m.energy<limits.coreMJ&&m.burn<=0){const fuel=Object.keys(m.fuel).find(k=>items[k]?.fuel);if(fuel){const grade=add(m.fuel,fuel,-1);recordFlow(s.planet,s.elapsed,fuel,flow.used);m.cellFuel=fuel===fullCell;
     const special=m.cellFuel||fuel==='antimatter-fuel-rod'||fuel==='df-strange-annihilation-fuel-rod';
     m.burnRate=special?speedRate[grade]:1+extraRate[grade];
@@ -177,7 +178,7 @@ function tickMecha(s,dt){
   m.burn-=recharge;m.energy=Math.min(limits.coreMJ,m.energy+recharge+dt*.08);
   // 满电蓄电器放尽才能回收外壳，中途读档仍属于同一次充电。
   if(m.cellFuel&&m.burn<=1e-9){m.burn=0;m.cellFuel=false;receiveStock(s,'bag',emptyCell,1,m.cellInc||0);recordFlow(s.planet,s.elapsed,emptyCell,flow.made);m.cellInc=0;}
-  if(m.flying){m.energy=Math.max(0,m.energy-dt*.14);if(!m.energy&&s.planet.biome!=='gas')m.flying=false;}
+  advanceLift(s,dt,liftAxis);
   if(m.target){const [dx,dy]=delta(m,m.target);if(distance(m,m.target)<.14)m.target=null;else walk(s,dx*Math.cos(m.y*ANGLE),dy,dt);}
   workTimber(s,dt);
   if(m.intake)workGas(s,dt);
@@ -196,8 +197,11 @@ function tickMecha(s,dt){
   handResearch(s,dt);
 }
 /** 按恒星一次分配射线，再分别结算每颗行星的电网。停留地点变化不能暂停远程工厂，也不能复制恒星发电。 */
-export function tick(s,dt=STEP){
-  s.elapsed+=dt;tickMecha(s,dt);runConstruction(s,dt);advanceFlight(s,dt);
+export function tick(s,dt=STEP,liftAxis=0,pilot){
+  s.elapsed+=dt;tickMecha(s,dt,liftAxis);
+  // 离轨的一步以当前自转相位定位。下一步才积分太空航程，避免同一时间间隔同时计入两种位移。
+  const launched=liftAxis>0&&pilot?.launch&&leaveAtmosphere(s);
+  runConstruction(s,dt);if(!launched)advanceFlight(s,dt,pilot);
   const addresses=[[s.space.current,s.planet],...Object.entries(s.space.parked)];
   if(addresses.length>1)addresses.sort((a,b)=>a[0].localeCompare(b[0]));
   const groups=new Map(),factories=[];

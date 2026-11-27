@@ -42,7 +42,8 @@ import {profiles} from './frame-budget.js';
 import {stationClick,stationChange} from './station-panel.js';
 import {capabilitiesOf} from './upgrades.js';
 import {activeStar,homeSystemOf,starOf,starSystem} from './cluster.js';
-import {AU,bodyOf,description,depart,toggleWarp,toggleFlight,positionAt,separation} from './navigation.js';
+import {heightOf,jumpFromGround} from './surface-motion.js';
+import {AU,bodyOf,description,depart,toggleWarp,toggleFlight,positionAt,separation,setCourse,takeHelm} from './navigation.js';
 import {wrap,clamp,key,distance} from './world.js';
 import {savedGames,storeGame,readGame,decode} from './save.js';
 import {panelBody,panelNames,button,timeText,powerText,hotkeys} from './panels.js';
@@ -60,6 +61,9 @@ const syncSector=setupSector();
 const ui={view:'menu',panel:null,tool:null,dir:0,start:null,vertical:false,selected:null,item:null,recipe:'magnetic-coil',query:'',hover:null,walking:false,paused:false};
 let world,s,slot,techDesk,galaxy,toastTimer,lastPanel='',pointer=null,held=null;
 const keys=new Set();
+let lastJumpKey=-Infinity;
+// 双击窗口使用现实时间以适配倍速。失去焦点和切换存档时也清空时间戳，回来后的第一次按键重新起算。
+function clearControls(){keys.clear();lastJumpKey=-Infinity;}
 const nav=[['bag','背包','F'],['craft','复制器','E'],['tech','科技','T'],['build','建造','B'],['blueprint','蓝图','0'],['survey','勘探','V'],['stats','统计','P']];
 function notify(message,error=false){const el=$('toast');el.textContent=message;el.className='toast'+(error?' error':'');el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,3200);}
 function save(quiet=false){try{storeGame(slot,s);publishPeak(s).catch(e=>notify(e.message,true));if(!quiet)notify('已保存本次进度');return true;}catch(e){notify('本机保存失败，可从系统菜单导出：'+e.message,true);return false;}}
@@ -72,7 +76,7 @@ function start(state,id,imported=false){
   ui.destination=s.space.flight?.to||s.space.current;ui.chartStar=homeSystemOf(ui.destination);ui.cluster=false;ui.followShip=!!s.space.flight;
   if(s.space.flight){ui.view='systemMap';ui.panel='chart';}
   if(s.scenario==='shield'&&!s.space.flight){ui.view='orbit';world.mapAngle=0;world.mapLat=1;world.mapZoom=182;}
-  keys.clear();world.setState(s);const overview=['freight','refinery','energy','gas','sorting','piling','coating','distribution','mission','relic','veins','mining','geology','defense','shield','bridge','signal','refit'].includes(s.scenario);world.zoom=overview?24:17;world.yaw=s.scenario==='defense'?-.12:overview?-.28:0;world.pitch=s.scenario==='refinery'?1:overview?.63:.82;if(s.scenario==='signal'){world.zoom=29;world.yaw=-.23;world.pitch=.59;}if(s.scenario==='bridge'){world.zoom=20;world.yaw=.31;world.pitch=.48;}if(s.scenario==='refit'){world.zoom=17.8;world.yaw=-.32;world.pitch=.70;}$('menu').hidden=true;$('hud').hidden=false;save(true);renderUI(true);
+  clearControls();world.setState(s);const overview=['freight','refinery','energy','gas','sorting','piling','coating','distribution','mission','relic','veins','mining','geology','defense','shield','bridge','signal','refit'].includes(s.scenario);world.zoom=overview?24:17;world.yaw=s.scenario==='defense'?-.12:overview?-.28:0;world.pitch=s.scenario==='refinery'?1:overview?.63:.82;if(s.scenario==='signal'){world.zoom=29;world.yaw=-.23;world.pitch=.59;}if(s.scenario==='bridge'){world.zoom=20;world.yaw=.31;world.pitch=.48;}if(s.scenario==='refit'){world.zoom=17.8;world.yaw=-.32;world.pitch=.70;}$('menu').hidden=true;$('hud').hidden=false;save(true);renderUI(true);
 }
 function surface(){
   requireRule(!s.space.flight,'抵达目的地后才能操作地表');
@@ -81,6 +85,7 @@ function surface(){
 }
 /** 飞行存档只能从航行视图恢复。飞行中 U 切换跟随与星图，两种模式都不能远程操作出发地的设施。 */
 function toggleChart(){
+  clearControls();
   if(ui.view==='sphere')exitEditor(ui);
   if(ui.view==='systemMap'&&ui.panel==='chart'){
     if(!s.space.flight){surface();ui.panel=null;}
@@ -103,7 +108,15 @@ function openSystem(id){
   const bodies=starSystem(s,id);if(!bodies.length)return;
   selectBody(bodies.find(body=>body.id===s.space.current)?.id||bodies[0].id);
 }
-function beginFlight(id,warp=false){depart(s,id,warp);ui.destination=id;ui.chartStar=homeSystemOf(id);ui.cluster=false;ui.view='systemMap';ui.panel='chart';ui.followShip=true;ui.tool=null;ui.start=null;notify('航线已设定，正在加速');}
+/** 离轨、接管和导航共用跟随视图。按键状态在模式切换时释放，地表爬升不会误触一次侧向喷射。 */
+function followFlight(message){
+  const flight=s.space.flight;
+  ui.destination=flight.to||s.space.current;
+  ui.chartStar=homeSystemOf(ui.destination);
+  Object.assign(ui,{cluster:false,view:'systemMap',panel:'chart',followShip:true,tool:null,start:null,selected:null,hover:null});
+  clearControls();$('hover').hidden=true;notify(message);
+}
+function beginFlight(id,warp=false){depart(s,id,warp);followFlight('航线已设定，正在加速');}
 function openPanel(id){
  if(ui.view==='sky')surface();
  if(s.space.flight&&['build','survey','machine','blueprint','reform','battle'].includes(id)){notify('抵达目的地后才能操作地表',true);return;}
@@ -136,14 +149,14 @@ function inspect(k){if(ui.selected!==k){
   // 同一检查窗换到另一座设施时从标题往下读；同一设施的实时读数刷新应保留玩家正在查看的位置。
   lastPanel='';ui.chainBelts=false;ui.stationTab='cargo';ui.stationEdit=null;}ui.selected=k;ui.panel='machine';ui.query='';ui.tool=null;ui.start=null;renderUI(true);}
 function cancel(){if(ui.panel==='blueprint'&&ui.bp.mode!=='library'){ui.bp.mode='library';ui.bp.first=null;ui.bp.last=null;}else if(ui.view==='sphere'){if(ui.panorama)ui.panorama=false;else if(ui.chain.length)ui.chain=[];else exitEditor(ui);}else if(ui.view==='systemMap'){if(s.space.flight){ui.followShip=false;ui.panel='chart';}else{surface();ui.panel=null;}}else if(ui.start){ui.start=null;}else if(ui.tool){ui.tool=null;}else if(ui.panel){ui.panel=null;}else if(ui.view==='orbit'||ui.view==='sky'){ui.view='surface';}else{openPanel('system');}renderUI(true);}
-function displayMenu(){if(!save(true))return;ui.view='menu';ui.panel=null;ui.tool=null;ui.hover=null;ui.paused=false;keys.clear();$('hud').hidden=true;$('panel').hidden=true;$('menu').hidden=false;$('continue').hidden=!latest();}
+function displayMenu(){if(!save(true))return;ui.view='menu';ui.panel=null;ui.tool=null;ui.hover=null;ui.paused=false;clearControls();$('hud').hidden=true;$('panel').hidden=true;$('menu').hidden=false;$('continue').hidden=!latest();}
 function exportGame(){const file=new Blob([JSON.stringify(s)],{type:'application/json'}),url=URL.createObjectURL(file),a=document.createElement('a');a.href=url;a.download='行星工厂-'+s.seed+'-'+Math.floor(s.elapsed)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);}
 /** 银河和交付窗口共享同一份本机目录。窗口盖住三维世界时继续推进工厂，返回时恢复原本视角。 */
 function closeGalaxy(){
   const shell=$('galaxy');
   if(!shell.open)return;
   if(galaxy.shownCompletion&&s.science.completion&&!s.science.completion.read){s.science.completion.read=true;save(true);}
-  shell.close();shell.hidden=true;keys.clear();renderUI(true);
+  shell.close();shell.hidden=true;clearControls();renderUI(true);
 }
 function openGalaxy(record=null){
   const inGame=ui.view!=='menu';
@@ -151,7 +164,7 @@ function openGalaxy(record=null){
   let rows=[];
   try{rows=savedGames();}catch(error){notify('无法读取本机存档目录：'+error.message,true);}
   galaxy??=new GalaxyMap($('galaxy'),closeGalaxy);
-  keys.clear();galaxy.show(rows,s,inGame?slot:null,record);
+  clearControls();galaxy.show(rows,s,inGame?slot:null,record);
 }
 $('galaxy').addEventListener('cancel',event=>{event.preventDefault();closeGalaxy();});
 const actions={
@@ -166,8 +179,11 @@ const actions={
   'watch-sky':watchSky,chart:toggleChart,'select-body':selectBody,'inspect-body':selectBody,'select-star':selectStar,
   'show-system':openSystem,'show-cluster'(){selectStar(ui.chartStar||activeStar(s).id);},
   depart(id){beginFlight(id);},'warp-depart'(id){beginFlight(id,true);},warp(){toggleWarp(s);},
-  'follow-ship'(){if(s.space.flight)ui.followShip=!ui.followShip;},
-  flight(){toggleFlight(s);notify(s.mecha.flying?'开启低空飞行':'机甲已着陆');},
+  'follow-ship'(){if(s.space.flight){ui.followShip=!ui.followShip;clearControls();}},
+  'set-course'(id){setCourse(s,id);followFlight('正在导航至'+bodyOf(s,id).title);},
+  'take-helm'(){takeHelm(s);followFlight('手动帆航 · 拖动瞄准，W 转向');},
+  flight(){toggleFlight(s);notify(s.mecha.flying?'推进器启动 · 空格上升，Alt 下降':'推进器关闭 · 正在着陆');},
+  pause(){ui.paused=!ui.paused;clearControls();},
   sphere(){if(s.space.flight){notify('抵达地表后可进入戴森球编辑器');return;}if(ui.view==='sphere')exitEditor(ui);else enterEditor(s,ui);},
   'soil-open'(){openPanel('reform');},
   'locate-seam'(id){
@@ -312,7 +328,7 @@ function renderPanel(force) {
     techDesk.sync(s);return;
   }
   if(techDesk && !techDesk.root.hidden)techDesk.hide();
-  panel.hidden=!ui.panel || ui.view==='menu' || (ui.view==='sphere' && ui.panorama);
+  panel.hidden=!ui.panel || ui.view==='menu' || (ui.view==='sphere' && ui.panorama) || (ui.view==='systemMap' && ui.followShip && ui.panel==='chart');
   if(panel.hidden) {lastPanel='';return;}
   // 用户操作数值或下拉框时暂停面板读数刷新；完成选择后命令会立即反映在模拟和界面上。
   if(!force && panel.contains(document.activeElement) && ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)) return;
@@ -378,9 +394,16 @@ function objective(){const m=s.mecha;
  if(s.scenario==='foundry')return '<small>示例工厂</small><strong>检查第一条冶炼线</strong><p>选中仓储，取出由矿机、传送带和冶炼炉送达的铁块。</p>'+button('inspect-machine','3,0','检查仓储 →');
  if(!s.techs.includes('electromagnetism'))return '<small>着陆任务</small><strong>研究电磁学</strong><p>采集 10 铁矿与 5 铜矿，在复制器制作 10 个磁线圈，再上传研究。</p>'+button('panel','survey','寻找矿脉 →');
  return '<small>工业起步</small><strong>建立自动化产线</strong><p>在复制器制造采矿机和风机。用传送带输出矿石，再用分拣器送入冶炼炉。</p>'+button('panel','build','打开建造菜单 →');}
-function toolHint(){if(ui.view==='sky')return '恒星高度 '+(world.solarAltitude??0).toFixed(1)+'° · 拖动环视 · 滚轮变焦 · H 返回';if(ui.view==='systemMap')return ui.followShip?'U 切换星图 · 自动追踪着陆点':'拖动旋转 · 滚轮缩放 · 点击天体查看资源';if(ui.view==='sphere')return designHint(ui)+' · Y 返回地表';if(ui.view==='orbit')return '拖动旋转行星 · 滚轮缩放 · M 返回地表';if(ui.paused)return '时间暂停 · 空格继续';
+function toolHint(){if(ui.view==='sky')return '恒星高度 '+(world.solarAltitude??0).toFixed(1)+'° · 拖动环视 · 滚轮变焦 · H 返回';if(ui.view==='systemMap'){
+   if(!ui.followShip)return '拖动旋转 · 滚轮缩放 · 点击天体查看资源';
+   return s.space.flight?.heading?'拖动瞄准 · W 转向 · Shift 加速 · S 减速 · U 星图':'U 切换星图 · 自动追踪着陆点';
+ }if(ui.view==='sphere')return designHint(ui)+' · Y 返回地表';if(ui.view==='orbit')return '拖动旋转行星 · 滚轮缩放 · M 返回地表';if(ui.paused)return '时间暂停 · K 继续';
  if(ui.panel==='reform')return '左键铺设 · − / ＋ 调整范围 · 右键退出';
  if(ui.panel==='blueprint')return ({select:'左键拖动框选 · 也可依次点选两个角',paste:'左键放置 · R 旋转 · F 镜像 · Esc 返回图纸库',review:'点击选区设施以剔除或恢复',library:'Ctrl+C 复制选区 · Ctrl+V 粘贴蓝图'})[ui.bp.mode];
+ if(!ui.tool&&ui.view==='surface'&&s.planet.biome!=='gas'){
+   if(s.mecha.flying)return '空格 / ↑ 上升　·　Alt / ↓ 下降　·　G 着陆'+(capabilitiesOf(s).sailMS?'　·　W + 空格升至 50 m 离轨':'');
+   return '左键交互　·　WASD 移动　·　空格跳跃'+(capabilitiesOf(s).drive?'，双按起飞':'')+'　·　右键旋转，滚轮缩放';
+ }
  if(!ui.tool)return '左键交互或移动　·　右键拖动旋转　·　滚轮缩放';if(ui.tool==='remove')return '拆除模式 · 点击回收 · Shift 点击连锁拆带 · Esc 退出';
  if(belts.includes(ui.tool))return name(ui.tool)+'　'+(ui.start?'选择终点':'选择起点')+' · 高度 '+(ui.beltLevel||0)+' 层 · ↑ ↓ 升降 · 0 落地 · R 切换折线';
  let hint='单击放置';if(sorters.includes(ui.tool))hint=ui.start?'选择送入端（直线 1–3 格）':'选择取货端';
@@ -397,7 +420,15 @@ function renderUI(force=false){if(!s||ui.view==='menu')return;
  $('flight-mode').hidden=ui.view!=='surface'||s.planet.biome==='gas'||!capabilitiesOf(s).drive;
  $('flight-mode').textContent=s.mecha.flying?'降落 G':'低空飞行 G';
  const f=s.space.flight;$('flight-hud').hidden=!chart||!f;
- if(f){$('nav-speed').textContent=Math.round(f.speed);$('nav-range').textContent=(separation(f.position,positionAt(s,bodyOf(s,f.to)))/AU).toFixed(2);$('nav-target').textContent=bodyOf(s,f.to).title;$('nav-energy').style.width=(s.mecha.energy/capabilitiesOf(s).coreMJ*100)+'%';}
+ document.body.classList.toggle('manual-helm',chart&&ui.followShip&&!!f?.heading);
+ if(f){
+   const beacon=bodyOf(s,f.to);
+   $('nav-speed').textContent=Math.round(f.speed);
+   $('nav-range-label').textContent=beacon?'航标距离 · AU':'飞行里程 · m';
+   $('nav-range').textContent=beacon?(separation(f.position,positionAt(s,beacon))/AU).toFixed(2):Math.round(f.travelled).toLocaleString();
+   $('nav-target').textContent=[f.heading?'手动帆航':'航线导航',beacon?.title].filter(Boolean).join(' · ');
+   $('nav-energy').style.width=(s.mecha.energy/capabilitiesOf(s).coreMJ*100)+'%';
+ }
  
  document.body.classList.toggle('stellar',stellar);
  document.body.classList.toggle('panorama',stellar&&ui.panorama);
@@ -407,7 +438,7 @@ function renderUI(force=false){if(!s||ui.view==='menu')return;
  canvas.setAttribute('aria-label',ui.view==='sky'?'机甲视角观星，拖动调整朝向':chart?'恒星系星图，可选择天体或旋转查看航线':stellar?'恒星与戴森球，可拖动观察和选中壳层节点':'三维行星地表，可点击矿脉、设施或移动目标');
  $('sphere-mode').textContent=ui.view==='sphere'?'返回地表 Y':'戴森球 Y';
  $('sector').textContent='SECTOR '+String(s.seed).padStart(8,'0');$('location-title').textContent=ui.view==='sphere'?activeStar(s).title+' · 戴森球':chart?(f?(f.warp?'曲速航行':'太空航行'):ui.cluster?'星团总览':starOf(s,ui.chartStar||activeStar(s).id).title+'系'):body.title+' · '+(ui.view==='orbit'?'轨道视图':description(body));
- $('coordinate').textContent=(Math.abs(s.mecha.y)*2).toFixed(2)+'° '+(s.mecha.y>=0?'N':'S')+'　'+(Math.abs(s.mecha.x)*2).toFixed(2)+'° '+(s.mecha.x>=0?'E':'W');
+ $('coordinate').textContent=(Math.abs(s.mecha.y)*2).toFixed(2)+'° '+(s.mecha.y>=0?'N':'S')+'　'+(Math.abs(s.mecha.x)*2).toFixed(2)+'° '+(s.mecha.x>=0?'E':'W')+((s.mecha.lift||s.mecha.flying)&&s.planet.biome!=='gas'?'　离地 '+heightOf(s.mecha).toFixed(1)+' m':'');
  $('view-mode').textContent=ui.view==='orbit'?'返回地表 M':'行星视图 M';$('speed').textContent=ui.paused?'暂停':'×'+s.speed;
  $('energy-text').textContent=s.mecha.energy.toFixed(1)+' MJ';$('energy').style.width=s.mecha.energy/capabilitiesOf(s).coreMJ*100+'%';$('clock').textContent=timeText(s.elapsed);$('grid-text').textContent='供电 '+powerText(s.grid?.delivered||0);
  setHtml($('objective'),objective()+flowSignal(s)+(s.planet.fog&&!stellar&&!chart?fogSignal(s):''));$('tool-hint').textContent=toolHint();
@@ -464,7 +495,7 @@ canvas.addEventListener('pointerdown',e=>{if(ui.view==='menu')return;pointer={x:
 canvas.addEventListener('pointermove',e=>{if(ui.view==='menu')return;pointer={x:e.clientX,y:e.clientY};if(held){const dx=e.clientX-held.lastX,dy=e.clientY-held.lastY;if(Math.hypot(e.clientX-held.x,e.clientY-held.y)>4)held.drag=true;
  if(held.drag&&held.button===0&&ui.panel==='blueprint'&&ui.bp.mode==='select'){
    ui.bp.first??=world.pick(held.x,held.y);ui.bp.last=world.pick(e.clientX,e.clientY);
- }else if(held.drag&&(held.button!==0||e.pointerType==='touch'||ui.view==='orbit'||ui.view==='sphere'||ui.view==='sky'||ui.view==='systemMap')){if(ui.view==='sky'){world.watchYaw+=dx*.005;world.watchPitch=clamp(world.watchPitch+dy*.005,-1.25,1.49);}else if(ui.view==='systemMap'&&world.systemMap){const map=world.systemMap;if(ui.followShip){map.chaseYaw-=dx*.006;map.chasePitch=clamp(map.chasePitch+dy*.005,-1.35,1.35);}else{map.yaw-=dx*.006;map.lat=clamp(map.lat+dy*.005,-1.39,1.39);}}else if(ui.view==='sphere'&&world.stellar){world.stellar.yaw-=dx*.007;world.stellar.latitude=clamp(world.stellar.latitude+dy*.007,-1.5,1.5);}else if(ui.view==='orbit'){world.mapAngle=wrap(world.mapAngle-dx*.16);world.mapLat=clamp(world.mapLat+dy*.14,-43,43);}else{world.yaw-=dx*.009;world.pitch=clamp(world.pitch+dy*.006,.24,1.49);}}
+ }else if(held.drag&&(held.button!==0||e.pointerType==='touch'||ui.view==='orbit'||ui.view==='sphere'||ui.view==='sky'||ui.view==='systemMap')){if(ui.view==='sky'){world.watchYaw+=dx*.005;world.watchPitch=clamp(world.watchPitch+dy*.005,-1.25,1.49);}else if(ui.view==='systemMap'&&world.systemMap){const map=world.systemMap;if(ui.followShip&&s.space.flight?.heading){map.turnSight(s.space.flight,dx,dy);}else if(ui.followShip){map.chaseYaw-=dx*.006;map.chasePitch=clamp(map.chasePitch+dy*.005,-1.35,1.35);}else{map.yaw-=dx*.006;map.lat=clamp(map.lat+dy*.005,-1.39,1.39);}}else if(ui.view==='sphere'&&world.stellar){world.stellar.yaw-=dx*.007;world.stellar.latitude=clamp(world.stellar.latitude+dy*.007,-1.5,1.5);}else if(ui.view==='orbit'){world.mapAngle=wrap(world.mapAngle-dx*.16);world.mapLat=clamp(world.mapLat+dy*.14,-43,43);}else{world.yaw-=dx*.009;world.pitch=clamp(world.pitch+dy*.006,.24,1.49);}}
  held.lastX=e.clientX;held.lastY=e.clientY;}$('hover').hidden=true;if(!held?.drag)hover(e.clientX,e.clientY);});
 canvas.addEventListener('pointerup',e=>{if(!held)return;const click=!held.drag;held=null;
  if(!click&&e.button===0&&ui.panel==='blueprint'&&ui.bp.mode==='select'&&ui.bp.first&&ui.bp.last){guarded(()=>selectArea(s,ui.bp,ui.bp.first,ui.bp.last));return;}
@@ -479,7 +510,7 @@ window.addEventListener('keydown',e=>{
   if(e.target.hasAttribute?.('data-stat-plot')&&['ArrowLeft','ArrowRight'].includes(e.key)){
     e.preventDefault();inspectColumn(e.target,$('panel'),Number(e.target.dataset.column??59)+(e.key==='ArrowLeft'?-1:1));return;
   }
-  if($('galaxy').open||ui.view==='menu'||['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||e.altKey)return;
+  if($('galaxy').open||ui.view==='menu'||['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||e.target.isContentEditable||(e.altKey&&e.key!=='Alt'))return;
  const k=e.key.toLowerCase();
  if(e.ctrlKey||e.metaKey){
    if(ui.view==='surface'&&!e.repeat&&['c','v'].includes(k)){e.preventDefault();guarded(()=>{if(ui.panel!=='blueprint')openPanel('blueprint');planCommand(s,ui.bp,k==='c'?'bp-copy':'bp-paste','',notify);});}return;
@@ -488,6 +519,27 @@ window.addEventListener('keydown',e=>{
    e.preventDefault();ui.beltLevel=k==='0'?0:clamp((ui.beltLevel||0)+(k==='arrowup'?1:-1),0,maxBeltLevel(s));
    if(pointer)hover(pointer.x,pointer.y);renderUI(true);return;
  }
+ const surfaceInput=ui.view==='surface'&&!ui.paused&&s.planet.biome!=='gas'&&!s.space.flight&&ui.panel!=='tech';
+ // 手动驾驶只在机甲跟随镜头接管方向键。打开地图或系统面板仍可用键盘浏览控件。
+ if(ui.view==='systemMap'&&ui.followShip&&ui.panel==='chart'&&s.space.flight?.heading&&!ui.paused&&['w','a','s','d','q','r','shift',' ','alt','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){
+   e.preventDefault();keys.add(k);return;
+ }
+ if(k===' '&&surfaceInput){
+   // 键盘聚焦的按钮仍可用空格激活。落地后直接按键或用鼠标点过地表则把空格交给机甲。
+   if(e.target.matches?.('button:focus-visible, a:focus-visible, summary:focus-visible'))return;
+   e.preventDefault();
+   if(e.repeat)return;
+   keys.add(k);
+   if(!s.mecha.flying){
+     const now=performance.now();
+     if(now-lastJumpKey<=330){lastJumpKey=-Infinity;guarded(actions.flight);}
+     else if(jumpFromGround(s))lastJumpKey=now;
+   }
+   return;
+ }
+ if(surfaceInput&&s.mecha.flying&&['arrowup','arrowdown','alt'].includes(k)){
+   e.preventDefault();keys.add(k);return;
+ }
  if(ui.panel==='blueprint'&&ui.bp.mode==='paste'&&['r','f'].includes(k)){if(!e.repeat)guarded(()=>planCommand(s,ui.bp,k==='r'?'bp-turn':'bp-mirror','',notify));return;}
  if(k==='z'&&!e.repeat&&ui.view==='surface'&&s.planet.fog){openPanel(ui.panel==='battle'?null:'battle');return;}
  if(k==='j'&&!e.repeat){guarded(()=>openPanel(ui.panel==='reform'?null:'reform'));return;}
@@ -495,9 +547,9 @@ window.addEventListener('keydown',e=>{
  if('wasd'.split('').includes(k)){keys.add(k);return;}if(e.repeat)return;
  const panel=nav.find(n=>n[2].toLowerCase()===k);if(panel){actions.panel(panel[0]);return;}
  if(k==='escape')cancel();else if(k==='capslock'&&s.space.flight&&!e.repeat)guarded(actions.warp);else if(k==='u')actions.chart();else if(k==='g'&&ui.view==='surface')guarded(actions.flight);else if(k==='h'&&['surface','sky'].includes(ui.view))watchSky();else if(k==='h'&&ui.view==='sphere')editorCommand(s,ui,'panorama');else if(k==='y')actions.sphere();else if(k==='m')toggleOrbit();else if(k==='r'&&ui.tool){if(belts.includes(ui.tool))ui.vertical=!ui.vertical;ui.dir=(ui.dir+1)%4;}else if(k==='tab'&&ui.tool){e.preventDefault();ui.vertical=!ui.vertical;}
- else if(k==='x')guarded(()=>chooseTool('remove'));else if(k===' '){e.preventDefault();ui.paused=!ui.paused;}else if(/^[1-9]$/.test(k))guarded(()=>{const type=(s.planet.biome==='gas'?[collector]:hotkeys)[Number(k)-1];if(type)chooseTool(type);});renderUI(true);
+ else if(k==='x')guarded(()=>chooseTool('remove'));else if(k==='k'){e.preventDefault();actions.pause();}else if(/^[1-9]$/.test(k))guarded(()=>{const type=(s.planet.biome==='gas'?[collector]:hotkeys)[Number(k)-1];if(type)chooseTool(type);});renderUI(true);
 });
-window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>keys.clear());
+window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',clearControls);
 let prev=0,acc=0,uiAge=0,saveAge=0,realTime=0,frameId=0,nextDraw=0;
 function scheduleFrame(){if(!document.hidden&&!frameId)frameId=requestAnimationFrame(frame);}
 function frame(ms){
@@ -515,9 +567,17 @@ function frame(ms){
    let steps=0;const deadline=performance.now()+8;
    while(acc>=STEP && steps<8 && (!steps||performance.now()<deadline)){steps++;const dx=Number(keys.has('d'))-Number(keys.has('a')),dy=Number(keys.has('w'))-Number(keys.has('s'));ui.walking=ui.view==='surface'&&!covered&&!!(dx||dy);
      if(ui.walking){s.mecha.target=null;s.mecha.mining=null;s.mecha.timber=null;const a=world.yaw;walk(s,dx*Math.cos(a)-dy*Math.sin(a),dx*Math.sin(a)+dy*Math.cos(a),STEP);}
-     const previousBody=s.space.current;
-     tick(s);acc-=STEP;
-     if(previousBody!==s.space.current){
+     const previousFlight=s.space.flight;
+     const liftAxis=ui.view==='surface'&&!covered?Number(keys.has(' ')||keys.has('arrowup'))-Number(keys.has('alt')||keys.has('arrowdown')):0;
+     let pilot;
+     if(previousFlight?.heading&&ui.followShip&&ui.view==='systemMap'&&ui.panel==='chart'&&!covered){
+       pilot=world.systemMap?.pilotInput(previousFlight,keys);
+     }else if(liftAxis>0&&keys.has('w'))pilot={launch:true};
+     tick(s,STEP,liftAxis,pilot);acc-=STEP;
+     if(!previousFlight&&s.space.flight){
+       followFlight('已进入手动帆航');renderUI(true);
+     }else if(previousFlight&&!s.space.flight){
+       clearControls();
        ui.view='surface';ui.panel=null;ui.followShip=false;ui.selected=null;ui.hover=null;
        ui.destination=s.space.current;ui.chartStar=activeStar(s).id;ui.cluster=false;world.cameraReady=false;notify((s.planet.biome==='gas'?'已进入云顶轨道 ':'已着陆 ')+bodyOf(s,s.space.current).title);renderUI(true);
      }
@@ -535,7 +595,7 @@ function frame(ms){
 }
 document.addEventListener('visibilitychange',() => {
   if(document.hidden){cancelAnimationFrame(frameId);frameId=0;if(slot&&ui.view!=='menu')save(true);}
-  prev=0;nextDraw=0;acc=0;keys.clear();world?.budget.reset();if(world)scheduleFrame();
+  prev=0;nextDraw=0;acc=0;clearControls();world?.budget.reset();if(world)scheduleFrame();
 });
 window.addEventListener('pagehide',()=>{if(slot&&ui.view!=='menu')save(true);});
 try{

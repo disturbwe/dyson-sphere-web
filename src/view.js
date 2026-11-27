@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {renderLift} from './surface-motion.js';
 import {FrameBudget,scaleFor} from './frame-budget.js';
 import {cloudTop,mooringGuide} from './cloud-top.js';
 import {BeaconView} from './beacon-view.js';
@@ -128,11 +129,11 @@ export class WorldView{
       c.position.copy(vector(this.mapAngle,this.mapLat)).multiplyScalar(this.mapZoom);c.up.set(0,1,0);c.lookAt(0,0,0);this.cameraReady=false;
     }else{
       const m=s.mecha,up=vector(m.x,m.y),east=new T.Vector3(Math.cos(m.x*ANGLE),0,-Math.sin(m.x*ANGLE)),south=east.clone().cross(up);
-      const target=up.clone().multiplyScalar((this.cloud?RADIUS+1.8:groundRadius(s.planet,m.x,m.y))+.42),horizontal=south.clone().multiplyScalar(Math.cos(this.yaw)).addScaledVector(east,Math.sin(this.yaw));
+      const target=up.clone().multiplyScalar((this.cloud?RADIUS:groundRadius(s.planet,m.x,m.y))+.42+renderLift(m)),horizontal=south.clone().multiplyScalar(Math.cos(this.yaw)).addScaledVector(east,Math.sin(this.yaw));
       const desired=target.clone().addScaledVector(up,this.zoom*Math.sin(this.pitch)).addScaledVector(horizontal,this.zoom*Math.cos(this.pitch));
       c.up.copy(up);
       if(mode==='sky'){
-        c.position.copy(target).addScaledVector(up,m.flying?3.8:2.5);
+        c.position.copy(target).addScaledVector(up,2.5);
         const sight=south.multiplyScalar(Math.cos(this.watchYaw)).addScaledVector(east,Math.sin(this.watchYaw));
         sight.multiplyScalar(Math.cos(this.watchPitch)).addScaledVector(up,Math.sin(this.watchPitch));
         c.lookAt(sight.add(c.position));this.cameraReady=false;
@@ -233,8 +234,11 @@ export class WorldView{
       this.land.userData.cull(this.surfaceFrustum);
       this.decor.userData.cull(this.surfaceFrustum);
     }
-    const s=this.s,m=s.mecha;this.bot.visible=ui.view!=='sky';pose(this.bot,m.x,m.y,s.planet,m.flying?1.65:.03,this.cloud);this.bot.rotateY(-(m.heading||0));this.bot.userData.body.rotation.z=m.mining!==null||m.timber!==null?Math.sin(time*8)*.065:0;
-    const stride=(m.target||ui.walking)?Math.sin(time*11)*.32:0;this.bot.userData.legL.rotation.x=stride;this.bot.userData.legR.rotation.x=-stride;
+    const s=this.s,m=s.mecha;this.bot.visible=ui.view!=='sky';pose(this.bot,m.x,m.y,s.planet,.03+renderLift(m),this.cloud);this.bot.rotateY(-(m.heading||0));this.bot.userData.body.rotation.z=m.mining!==null||m.timber!==null?Math.sin(time*8)*.065:0;
+    // 腾空时屈膝收腿，地面步幅只随步行变化；失能下落仍沿用同一高度，机甲不会瞬移。
+    const stride=!m.flying&&!m.lift&&(m.target||ui.walking)?Math.sin(time*11)*.32:0;
+    const tuck=m.flying?.22:m.lift?Math.min(.42,m.lift.height*.16):0;
+    this.bot.userData.legL.rotation.x=tuck+stride;this.bot.userData.legR.rotation.x=tuck-stride;
     this.decor.userData.syncCuts?.();
     this.thrusters.exhaust.visible=m.flying;this.thrusters.clock.value=time;this.thrusters.thrust.value=ui.walking?.25:0;
     this.land.material.userData.clock.value=time;this.carriers.draw(s);

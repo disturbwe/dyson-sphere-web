@@ -1,4 +1,5 @@
 import {AU,starSystem,bodyOf,positionAt,mechaPosition,separation,description} from './navigation.js';
+import {heightOf} from './surface-motion.js';
 import {rotationOf} from './ephemeris.js';
 import {clusterOf,activeStar,starOf,spectra,LY,distanceLY} from './cluster.js';
 import {makePlanet,environments} from './world.js';
@@ -39,7 +40,7 @@ function clusterPanel(game,ui){
   html+=button('show-system',selected.id,'查看恒星系','primary')+chartSignals(game,selected.id,true);
   html+=section('环绕天体');
   for(const body of systems)html+=button('inspect-body',body.id,body.title+' · '+description(body));
-  if(flight){html+=section('航线')+line('目的地',bodyOf(game,flight.to).title)+line('航行状态',flight.warp?'曲速中':'常规航行')+button('follow-ship','','跟随机甲');}
+  if(flight){html+=section('航线')+line('目的地',bodyOf(game,flight.to)?.title||'自由帆航')+line('航行状态',flight.warp?'曲速中':'常规航行')+button('follow-ship','','跟随机甲');}
   return html;
 }
 /** 星图展示正在选择的天体，并分开报告当前位置和飞行目标。起飞/着陆交给航行模拟，面板可随时收起。 */
@@ -50,10 +51,16 @@ export function starChart(game,ui){
   let h=button('show-cluster','','‹ 星团总览')+'<label class="body-select"><span>目标天体</span><select aria-label="目标天体" id="body-select">'+starSystem(game,body.star).map(b=>'<option value="'+b.id+'" '+(b.id===body.id?'selected':'')+'>'+b.title+' · '+description(b)+'</option>').join('')+'</select></label>';
   h+='<h3 class="chart-title">'+body.title+'</h3><div class="chart-sub">'+description(body)+(body.parent?' · 卫星':' · 行星')+'</div>';
   if(flight){
-    const destination=bodyOf(game,flight.to),left=separation(flight.position,positionAt(game,destination));
-    h+=section('伊卡洛斯航行')+line('抵达天体',destination.title)+line('剩余距离',formatDistance(left))+line('航行速度',Math.round(flight.speed)+' m/s')+line('核心能量',game.mecha.energy.toFixed(1)+' MJ')+button('follow-ship','',ui.followShip?'切换至星图':'跟随机甲飞行','primary');
+    const destination=bodyOf(game,flight.to);
+    h+=section('伊卡洛斯航行')+line('驾驶模式',flight.heading?'手动帆航':'航线导航');
+    if(destination)h+=line('航标天体',destination.title)+line('航标距离',formatDistance(separation(flight.position,positionAt(game,destination))));
+    h+=line('航行速度',Math.round(flight.speed)+' m/s')+line('核心能量',game.mecha.energy.toFixed(1)+' MJ');
+    // 选择天体只查看星历，按导航按钮才改变航向，便于滑行中查看别的工厂。
+    if(flight.heading||flight.to!==body.id)h+=button('set-course',body.id,'导航至'+body.title,'primary');
+    if(!flight.heading)h+=button('take-helm','','接管手动帆航');
+    h+=button('follow-ship','',ui.followShip?'切换至星图':'跟随机甲飞行');
     if(capabilitiesOf(game).warpMS)h+=button('warp','',flight.warp?'退出曲速 Caps Lock':'启动曲速 Caps Lock');
-  }else if(body.id===game.space.current)h+=line('机甲位置',env?'已着陆':'云顶悬浮')+button('chart','',env?'返回地表':'返回同步轨道','primary');
+  }else if(body.id===game.space.current)h+=line('机甲位置',!env?'云顶悬浮':game.mecha.flying||game.mecha.lift?'离地 '+heightOf(game.mecha).toFixed(1)+' m':'已着陆')+button('chart','',env?'返回地表':'返回同步轨道','primary');
   else{h+=line('机甲距离',formatDistance(distance));
     h+=capabilitiesOf(game).sailMS?button('depart',body.id,env?'启航至该行星':'启航至巨星云顶','primary'):note('星际航行需要驱动引擎 II');
     if(distance>LY*.25&&capabilitiesOf(game).warpMS)h+=button('warp-depart',body.id,'曲速航行 · 1 枚翘曲器');}

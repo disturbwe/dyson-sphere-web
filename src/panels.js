@@ -57,7 +57,7 @@ function inventory(s,ui){
  if(items[id]?.fuel)h+=button('fuel',id,'装入燃料仓 ×1');h+='</div></div>';}
  h+=line('沙土储备',s.mecha.soil.toLocaleString());
  h+=section('燃料仓',s.mecha.energy.toFixed(1)+' / '+capabilitiesOf(s).coreMJ+' MJ')+(Object.keys(s.mecha.fuel).length?list(s.mecha.fuel):note('选择背包中的煤等燃料可给机甲核心充能。'));
- if(capabilitiesOf(s).drive&&!s.space.flight)h+='<div class="actions">'+button('flight','',s.mecha.flying?'降落　G':'低空飞行　G')+'</div>';
+ if(capabilitiesOf(s).drive&&!s.space.flight&&s.planet.biome!=='gas')h+='<div class="actions">'+button('flight','',s.mecha.flying?'降落　G':'低空飞行　G')+'</div>';
  if(s.scenario==='sandbox') h+=section('沙盒物品','点击添加一组')+search(ui.query)+grid(physical.filter(i=>matches(i.id,ui.query)).map(i=>card('sandbox-item',i.id,null)).join(''));
  return h;
 }
@@ -169,10 +169,10 @@ function stats(s,ui){
  if(tab==='production')return bar+productionPanel(s,ui.statDesk);
  if(tab==='metadata')return bar+metadataPanel(s,ui);
  return bar+section('全行星电网')+'<div class="readout">'+line('发电能力',powerText(s.grid?.supply||0))+line('设备需求',powerText(s.grid?.demand||0))+line('实际供电',powerText(s.grid?.delivered||0))+line('独立网络',s.grid?.networks||0)+line('储能充电',powerText(s.grid?.charging||0))+line('储能放电',powerText(s.grid?.discharging||0))+line('固定电池储能',(s.grid?.stored||0).toFixed(1)+' / '+(s.grid?.capacity||0)+' MJ')+'</div>'+'<details><summary>历史总产出与采集</summary>'+list(s.stats.made)+list(s.stats.mined)+'</details>';}
-function system(s,ui){let h=section('本次着陆',timeText(s.elapsed))+'<div class="actions">'+button('save','','立即保存','primary')+button('export','','导出存档')+button('import','','导入存档')+button('menu','','保存并返回标题')+button('galaxy','','银河系 · 本机记录')+(s.science.completion?button('mission-record','','主线交付记录'):'')+'</div>';
+function system(s,ui){let h=section('本次着陆',timeText(s.elapsed))+'<div class="actions">'+button('save','','立即保存','primary')+button('pause','',ui.paused?'继续时间 K':'暂停时间 K')+button('export','','导出存档')+button('import','','导入存档')+button('menu','','保存并返回标题')+button('galaxy','','银河系 · 本机记录')+(s.science.completion?button('mission-record','','主线交付记录'):'')+'</div>';
  h+=line('星区地址',homeAddress(s));
  h+=section('画面与性能',(ui.fps?Math.round(ui.fps)+' FPS':'采样中')+' · '+((ui.pixels||0)/1e6).toFixed(2)+' MP')+'<div class="pills">'+Object.entries(profiles).map(([id,p])=>button('graphics',id,p.name+' '+p.fps+' 帧','pill '+(ui.graphics===id?'active':''))).join('')+'</div>';
- h+=section('操作')+'<div class="hotkey-help"><kbd>W A S D</kbd><span>移动机甲</span><kbd>右键拖动</kbd><span>旋转镜头，滚轮缩放</span><kbd>左键</kbd><span>选择设施、采矿、前往地面</span><kbd>1 – 9 / R</kbd><span>选择设施 / 调整朝向</span><kbd>R / Tab</kbd><span>切换传送带折线方向</span><kbd>↑ ↓ / 0</kbd><span>升降带端点 / 回到地面</span><kbd>X · Shift 点击</kbd><span>拆除建造范围内相连的输送带</span><kbd>Esc / 右键</kbd><span>退出当前操作</span><kbd>M / 空格</kbd><span>行星视图 / 暂停时间</span></div>';
+ h+=section('操作')+'<div class="hotkey-help"><kbd>W A S D</kbd><span>移动机甲</span><kbd>右键拖动</kbd><span>旋转镜头，滚轮缩放</span><kbd>左键</kbd><span>选择设施、采矿、前往地面</span><kbd>1 – 9 / R</kbd><span>选择设施 / 调整朝向</span><kbd>R / Tab</kbd><span>切换传送带折线方向</span><kbd>↑ ↓ / 0</kbd><span>升降带端点 / 回到地面</span><kbd>X · Shift 点击</kbd><span>拆除建造范围内相连的输送带</span><kbd>Esc / 右键</kbd><span>退出当前操作</span><kbd>空格</kbd><span>跳跃，双按启动低空飞行</span><kbd>空格 / Alt</kbd><span>低空飞行中上升 / 下降</span><kbd>W + 空格</kbd><span>升至 50 m 后离轨（驱动引擎 II）</span><kbd>W / Shift / S</kbd><span>帆航中朝准星转向 / 加速 / 刹车</span><kbd>U / Caps Lock</kbd><span>星图导航 / 曲速开关</span><kbd>M / K</kbd><span>行星视图 / 暂停时间</span></div>';
  let slots=[];try{slots=savedGames();}catch{}if(slots.length){h+=section('本机存档');for(const slot of slots)h+=row('read-slot',slot.slot,(scenarios[slot.scenario]||'存档')+' · '+Number(slot.seed),new Date(slot.date).toLocaleString('zh-CN'));}return h;
 }
 export const panelNames={marks:'信标总控',mark:'远程信标设置',battle:'地面战况',reform:'地形改造',blueprint:'工厂蓝图',chart:'星图',sphere:'戴森球编辑器',bag:'机甲背包',craft:'复制器',tech:'科技树',build:'建造',machine:'设施控制',survey:'地表勘探',stats:'统计面板',system:'系统菜单'};

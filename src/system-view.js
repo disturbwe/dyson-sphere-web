@@ -5,6 +5,7 @@ import {rotationOf} from './ephemeris.js';
 import {makeSun,makeDeepSky} from './stellar-light.js';
 import {gasProfile} from './gas.js';
 import {flightModel} from './flight-render.js';
+import {pilotStar} from './sail-pilot.js';
 import {ClusterView} from './cluster-view.js';
 import {activeStar,centerMeters,homeSystemOf,starOf} from './cluster.js';
 import {CarrierView} from './carrier-view.js';
@@ -65,10 +66,41 @@ export class SystemView {
     this.deepSky=makeDeepSky();this.deepSky.visible=false;this.scene.add(this.deepSky);
     this.right=new T.Vector3();this.shipUp=new T.Vector3();this.basis=new T.Matrix4();
     this.chaseYaw=0;this.chasePitch=.30;this.chaseRange=.015;
+    this.sight=new T.Vector3();this.sightRight=new T.Vector3();this.sightUp=new T.Vector3();this.desired=new T.Vector3();
     this.light=new T.PointLight('#ffecd4',45,0,.5);this.scene.add(this.light);
     this.projection=new T.Vector3();this.forward=new T.Vector3();this.ship=new T.Vector3();this.target=new T.Vector3();this.up=new T.Vector3(0,1,0);
     this.sky=background;this.center=new T.Vector3();this.remoteTarget=new T.Vector3();
     this.yaw=-.71;this.lat=.48;this.distance=54;
+  }
+  /** 准星使用独立的恒星坐标航向。接管或读档时从当前速度方向开始，转动镜头后松开 W 仍可观察侧面。 */
+  sightFor(flight){
+    if(this.helmFlight!==flight){
+      this.helmFlight=flight;
+      const [x,y,z]=flight.heading;
+      this.lookYaw=Math.atan2(x,z);this.lookPitch=Math.asin(T.MathUtils.clamp(y,-1,1));
+    }
+    const yaw=this.lookYaw,pitch=this.lookPitch,flat=Math.cos(pitch);
+    this.sight.set(Math.sin(yaw)*flat,Math.sin(pitch),Math.cos(yaw)*flat);
+    this.sightRight.set(-Math.cos(yaw),0,Math.sin(yaw));
+    this.sightUp.crossVectors(this.sightRight,this.sight);
+  }
+  /** 右键拖动只改变准星。限制俯仰到接近两极，避免下一次拖动突然倒转。 */
+  turnSight(flight,dx,dy){
+    this.sightFor(flight);
+    this.lookYaw-=dx*.006;
+    this.lookPitch=T.MathUtils.clamp(this.lookPitch-dy*.005,-Math.PI/2+.001,Math.PI/2-.001);
+  }
+  /** 每个固定步读取当前驾驶指令，只有方向键实际按住时才生成要写入存档的单位航向。 */
+  pilotInput(flight,keys){
+    const forward=keys.has('w');
+    const side=Number(keys.has('d')||keys.has('r')||keys.has('arrowright'))-Number(keys.has('a')||keys.has('q')||keys.has('arrowleft'));
+    const lift=Number(keys.has(' ')||keys.has('arrowup'))-Number(keys.has('alt')||keys.has('arrowdown'));
+    let aim;
+    if(forward||side||lift){
+      this.sightFor(flight);
+      aim=this.desired.copy(this.sight).multiplyScalar(Number(forward)).addScaledVector(this.sightRight,side).addScaledVector(this.sightUp,lift).normalize().toArray();
+    }
+    return {aim,forward,boost:keys.has('shift'),brake:keys.has('s')};
   }
   reset(game,starId=activeStar(game).id){
     if(this.game===game&&this.starId===starId){
@@ -94,11 +126,9 @@ export class SystemView {
     this.galaxyMode=false;
     const destination=bodyOf(game,flight?.to);
     let starId=ui.chartStar||activeStar(game).id;
-    if(close){
-      const start=activeStar(game),end=starOf(game,destination.star);
-      // 以最近的恒星为局部原点，机甲近景的亚米级几何不会因全星团浮点坐标而抖动。
-      const at=this.ship.fromArray(flight.position);starId=at.distanceTo(this.center.fromArray(centerMeters(start)))<=at.distanceTo(this.center.fromArray(centerMeters(end)))?start.id:end.id;
-    }
+    // 手动离轨允许没有选中目标。在距离机甲最近的恒星旁建立渲染原点，保持近景几何精度。
+    if(close)starId=pilotStar(game,flight.position).id;
+    if(!flight?.heading)this.helmFlight=null;
     this.reset(game,starId);
     this.center.fromArray(centerMeters(starOf(game,starId)));
     this.deepSky.visible=close;this.camera.near=close?.0003:.012;
@@ -124,14 +154,25 @@ export class SystemView {
     this.target.fromArray(positionAt(game,selection)).sub(this.center).multiplyScalar(unit);
     this.craft.visible=!!flight;this.trail.visible=!close&&selection.id!==game.space.current||!!flight&&!close;
     if(this.trail.visible){const attribute=this.trail.geometry.attributes.position;attribute.setXYZ(0,...this.ship.toArray());attribute.setXYZ(1,...this.target.toArray());attribute.needsUpdate=true;this.trail.computeLineDistances();}
-    if(flight){this.forward.fromArray(positionAt(game,destination)).sub(this.center).multiplyScalar(unit).sub(this.ship).normalize();this.craft.position.copy(this.ship);
-      // 背甲始终朝向航行平面法线，避免航向跨越世界坐标轴时机甲翻滚。近景采用真实米制比例。
-      this.right.crossVectors(this.forward,this.up).normalize();this.shipUp.crossVectors(this.right,this.forward).normalize();
+    if(flight){
+      if(flight.heading)this.forward.fromArray(flight.heading);
+      else this.forward.fromArray(positionAt(game,destination)).sub(this.center).multiplyScalar(unit).sub(this.ship).normalize();
+      this.craft.position.copy(this.ship);
+      this.right.crossVectors(this.forward,this.up);
+      // 正上方或正下方也有合法航向。近极点使用准星方位，保证机甲变换矩阵一直可逆。
+      if(this.right.lengthSq()<1e-10){
+        if(flight.heading){this.sightFor(flight);this.right.copy(this.sightRight);}else this.right.set(1,0,0);
+      }
+      this.right.normalize();this.shipUp.crossVectors(this.right,this.forward).normalize();
       this.craft.quaternion.setFromRotationMatrix(this.basis.makeBasis(this.right,this.forward,this.shipUp));
       this.propulsion.clock.value=game.elapsed;this.propulsion.thrust.value=Math.min(1,flight.speed/2000);
       this.craft.scale.setScalar(close?.0009:.16);}
     this.camera.clearViewOffset();this.camera.aspect=w/h;
-    if(close){
+    if(close&&flight.heading){
+      this.sightFor(flight);
+      this.camera.position.copy(this.ship).addScaledVector(this.sight,-this.chaseRange).addScaledVector(this.sightUp,this.chaseRange*.12);
+      this.camera.up.copy(this.sightUp);this.camera.lookAt(this.projection.copy(this.camera.position).add(this.sight));
+    }else if(close){
       const d=this.chaseRange, flat=Math.cos(this.chasePitch)*d;
       this.camera.position.copy(this.ship).addScaledVector(this.forward,-flat*Math.cos(this.chaseYaw))
         .addScaledVector(this.right,flat*Math.sin(this.chaseYaw)).addScaledVector(this.shipUp,d*Math.sin(this.chasePitch));

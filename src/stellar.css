@@ -77,7 +77,9 @@ body.chart-view .note{padding:6px 0;border:0;background:transparent}
 #map-labels .star-label.selected{color:#ffe6ad;box-shadow:inset 0 -1px #bba171}
 #map-labels .star-label.home::after{content:' · 伊卡洛斯';color:#8be1c9}
 body.chart-view .tool-hint{background:transparent;color:#b3c1c7;text-shadow:1px 1px #000}
-body.chart-view.ship-follow #panel{display:none}body.ship-follow .bottom-main{bottom:100px}
+body.ship-follow .bottom-main{bottom:100px}
+/* 准星位于镜头光轴，底部仪表独立显示速度。准星穿透指针事件，拖动可从屏幕中央开始。 */
+body.manual-helm #hud::after{content:'';position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border:1px solid #d9f8f3ba;box-shadow:0 0 2px #172733;pointer-events:none}
 #flight-hud{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:min(440px,80vw);text-align:center;color:#ddeaf1;pointer-events:none;text-shadow:0 2px 5px #000}
 .flight-line{display:flex;align-items:center;justify-content:center;gap:18px}.flight-line>div{width:38%;display:flex;flex-direction:column;align-items:flex-end}.flight-line>div:last-child{align-items:flex-start}
 .flight-line small{font-size:10px;letter-spacing:.08em;color:#acc4ce}.flight-line b{font:500 25px var(--mono);letter-spacing:-.05em}

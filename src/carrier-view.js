@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {renderLift} from './surface-motion.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {axis,RADIUS} from './world.js';
 import {groundRadius} from './reform-terrain.js';
@@ -93,13 +94,15 @@ export class CarrierView{
         // 机甲走动会触发一段追赶航程。仅在航段切换时计算起降点，常规帧沿缓存的大圆弧插值。
         const endpoint=(x,y,personal)=>{
           const floor=planet.tiles[Math.round(x)+','+Math.round(y)]?.layers||1;
-          const height=groundRadius(planet,x,y)+(personal?1.75+(game.mecha.flying?1.65:0):floor*1.16+.71);
-          return {normal:new T.Vector3(...axis(x,y)),height};
+          const dock=groundRadius(planet,x,y)+(personal?1.75:floor*1.16+.71);
+          return {normal:new T.Vector3(...axis(x,y)),dock,height:dock+(personal?renderLift(game.mecha):0)};
         };
         const personal=trip.peer===icarusPort;
         path={back:trip.back,bx:trip.bx,by:trip.by,a:endpoint(trip.ax,trip.ay,personal&&trip.back),b:endpoint(trip.bx,trip.by,personal&&!trip.back)};
         this.tripCache.set(trip,path);
       }
+      // 机甲可在原地升降，来货航段只更新末端的径向坐标，复用已计算的球面路径与出发高度。
+      if(trip.peer===icarusPort&&!trip.back)path.b.height=path.b.dock+renderLift(game.mecha);
       this.surfaceLeg(batch,path.a,path.b,1-Math.max(0,Math.min(1,trip.remaining/trip.leg)),1);
     }
   }

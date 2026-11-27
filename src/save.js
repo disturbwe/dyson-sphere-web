@@ -21,6 +21,7 @@ import {liquids,tankCapacity} from './liquid-ports.js';
 import {isSeep,restoreOldSeeps} from './oil.js';
 import {newNavigation,bodyOf,sphereOf} from './navigation.js';
 import {homeSystemOf,starOf} from './cluster.js';
+import {validLift} from './surface-motion.js';
 import {capabilitiesOf} from './upgrades.js';
 import {newSphere,orbitById} from './sphere.js';
 import {validateSphere} from './sphere-save.js';
@@ -193,6 +194,7 @@ export function decode(raw){
   if(body.biome==='gas'&&!s.space.flight)requireValue(m.flying);
   if(m.intake!=null)requireValue(body.biome==='gas'&&!s.space.flight&&gasProfile(body).gases.some(g=>g.item===m.intake)&&number(m.intakeWork)&&m.intakeWork>=0&&m.intakeWork<1);
   validatePlanet(s.planet,body,s);
+  requireValue(validLift(s));
   requireValue(m.mining===null||Number.isInteger(m.mining)&&!!s.planet.veins[m.mining]&&!isSeep(s.planet.veins[m.mining]));
   if(m.timber!==null){const forest=forestOf(s.planet);requireValue(m.mining===null&&Number.isInteger(m.timber)&&!!forest.trees[m.timber]&&!forest.removed.has(m.timber)&&!s.space.flight);}
   for(const [id,planet] of Object.entries(s.space.parked)){
@@ -201,10 +203,14 @@ export function decode(raw){
   validateHives(s);validateFreight(s);
   const flight=s.space.flight;
   if(flight!==null){
-    requireValue(record(flight)&&flight.from===body.id&&flight.to!==body.id&&!!bodyOf(s,flight.to));
+    requireValue(record(flight)&&flight.from===body.id&&capabilitiesOf(s).sailMS>0);
+    const manual=flight.heading!==undefined;
+    // 手动帆航可在深空停船且无需目的地。持久化的单位向量决定下一步位移，长度失真会绕过引擎航速限制。
+    if(manual)requireValue(Array.isArray(flight.heading)&&flight.heading.length===3&&flight.heading.every(number)&&Math.abs(Math.hypot(...flight.heading)-1)<1e-7&&!flight.autoWarp);
+    requireValue(manual&&flight.to===null||!!bodyOf(s,flight.to));
     requireValue(Array.isArray(flight.position)&&flight.position.length===3&&flight.position.every(number));
     for(const key of ['warp','autoWarp'])if(flight[key]!==undefined)requireValue(typeof flight[key]==='boolean'&&(!flight[key]||capabilitiesOf(s).warpMS>0));
-    requireValue(number(flight.speed)&&flight.speed>0&&flight.speed<=(flight.warp?capabilitiesOf(s).warpMS:capabilitiesOf(s).sailMS)&&number(flight.travelled)&&flight.travelled>=0&&!m.flying&&!m.target&&m.mining===null);
+    requireValue(number(flight.speed)&&flight.speed>=0&&flight.speed<=(flight.warp?capabilitiesOf(s).warpMS:capabilitiesOf(s).sailMS)&&number(flight.travelled)&&flight.travelled>=0&&!m.flying&&!m.target&&m.mining===null);
   }
   requireValue(Array.isArray(s.queue)&&[1,2,4].includes(s.speed));
   validateScience(s);
